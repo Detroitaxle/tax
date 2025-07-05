@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Price Match Tool - Live Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #f1f1f1;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px;
+      background-color: #2b2b2b;
+      color: #f1f1f1;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+    .item {
+      margin-bottom: 15px;
+    }
+    button {
+      margin: 5px 5px 15px 0;
+      padding: 10px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #output {
+      white-space: pre-wrap;
+      margin-top: 20px;
+      background-color: #2b2b2b;
+      padding: 15px;
+      border: 1px solid #555;
+    }
+    #clearBtn {
+      display: none;
+      background-color: #dc3545;
+    }
+  </style>
+</head>
+<body>
+  <h1>Price Match Tool</h1>
+
+  <div>
+    <label>Full price:</label>
+    <input type="number" id="fullPrice" placeholder="Enter full price...">
+  </div>
+
+  <div id="items">
+    <div class="item">
+      <label>SKU:</label>
+      <input type="text" class="sku" placeholder="SKU...">
+      <label>Price:</label>
+      <input type="number" class="price" placeholder="Price...">
+    </div>
+  </div>
+
+  <button onclick="addItem()">Add Another Item</button>
+  <button onclick="calculate()">Calculate</button>
+  <button id="clearBtn" onclick="clearFields()">Clear</button>
+
+  <div id="output"></div>
+
+  <script>
+    function addItem() {
+      const container = document.getElementById('items');
+      const item = document.createElement('div');
+      item.classList.add('item');
+      item.innerHTML = `
+        <label>SKU:</label>
+        <input type="text" class="sku" placeholder="SKU...">
+        <label>Price:</label>
+        <input type="number" class="price" placeholder="Price...">
+      `;
+      container.appendChild(item);
+    }
+
+    function calculate() {
+      const fullPrice = parseFloat(document.getElementById('fullPrice').value) || 0;
+      const skus = document.querySelectorAll('.sku');
+      const prices = document.querySelectorAll('.price');
+      let subtotal = 0;
+      let items = [];
+
+      for (let i = 0; i < skus.length; i++) {
+        const sku = skus[i].value.trim();
+        const price = parseFloat(prices[i].value) || 0;
+        subtotal += price;
+        items.push({ sku, price });
+      }
+
+      const tax = fullPrice - subtotal;
+      let result = `Full Price: $${fullPrice.toFixed(2)}\nSubtotal (before tax): $${subtotal.toFixed(2)}\nTax: $${tax.toFixed(2)}\n\n`;
+
+      items.forEach(item => {
+        const proportion = item.price / subtotal;
+        const addedTax = proportion * tax;
+        const totalWithTax = item.price + addedTax;
+        result += `SKU: ${item.sku}, Price: $${item.price.toFixed(2)}, Tax Share: $${addedTax.toFixed(2)}, Total w/Tax: $${totalWithTax.toFixed(2)}\n`;
+      });
+
+      document.getElementById('output').textContent = result;
+      document.getElementById('clearBtn').style.display = 'inline-block';
+    }
+
+    function clearFields() {
+      document.getElementById('fullPrice').value = '';
+      document.getElementById('items').innerHTML = `
+        <div class="item">
+          <label>SKU:</label>
+          <input type="text" class="sku" placeholder="SKU...">
+          <label>Price:</label>
+          <input type="number" class="price" placeholder="Price...">
+        </div>
+      `;
+      document.getElementById('output').textContent = '';
+      document.getElementById('clearBtn').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
