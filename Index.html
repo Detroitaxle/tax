@@ -2,191 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Price Match Tool - Dark Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detroit Axle - Price Match Tool</title>
   <style>
-    :root {
-      --primary: #3a86ff;
-      --primary-hover: #2667cc;
-      --danger: #ff3860;
-      --danger-hover: #e02c52;
-      --success: #2ecc71;
-      --text: #f1f1f1;
-      --text-muted: #b0b0b0;
-      --bg: #121212;
-      --bg-elevated: #1e1e1e;
-      --bg-highlight: #2a2a2a;
-      --border: #333;
-    }
-    
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #333;
       line-height: 1.6;
-    }
-    
-    h1 {
-      text-align: center;
-      color: var(--primary);
-      margin-bottom: 30px;
-      font-weight: 600;
+      margin: 0;
+      padding: 0;
     }
     
     .container {
-      background-color: var(--bg-elevated);
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     
-    .input-group {
-      margin-bottom: 20px;
+    h1 {
+      color: #d9230f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
     }
     
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--text);
+      margin-bottom: 5px;
+      font-weight: bold;
     }
     
-    input[type="text"], 
+    input[type="text"],
     input[type="number"] {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 5px;
-      background-color: var(--bg-highlight);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
       box-sizing: border-box;
-      font-size: 15px;
-      transition: all 0.2s;
-    }
-    
-    input[type="text"]:focus, 
-    input[type="number"]:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
     }
     
     .item {
-      margin-bottom: 15px;
-      padding: 16px;
-      background-color: var(--bg-highlight);
-      border-radius: 8px;
-      border-left: 3px solid var(--primary);
-      transition: transform 0.2s;
+      background: #f1f1f1;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
     }
     
-    .item:hover {
-      transform: translateY(-2px);
-    }
-    
-    .button-group {
-      margin: 25px 0;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    
-    button {
-      padding: 12px 18px;
-      border: none;
-      background-color: var(--primary);
+    .btn {
+      display: inline-block;
+      background: #d9230f;
       color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 15px;
-      transition: all 0.2s;
+      text-decoration: none;
+      margin-right: 10px;
+      margin-bottom: 10px;
     }
     
-    button:hover {
-      background-color: var(--primary-hover);
-      transform: translateY(-1px);
+    .btn:hover {
+      background: #a91b0c;
     }
     
-    #clearBtn {
-      background-color: var(--danger);
-      display: none;
+    .btn-secondary {
+      background: #6c757d;
     }
     
-    #clearBtn:hover {
-      background-color: var(--danger-hover);
+    .btn-secondary:hover {
+      background: #5a6268;
     }
     
     #output {
       margin-top: 20px;
-      background-color: var(--bg-highlight);
-      padding: 20px;
-      border-radius: 8px;
-      border-left: 3px solid var(--success);
+      padding: 15px;
+      background: #f1f1f1;
+      border-radius: 4px;
       white-space: pre-wrap;
-      font-family: 'Fira Code', 'Consolas', monospace;
-      line-height: 1.6;
-      color: var(--text);
     }
     
-    .section-title {
-      font-size: 18px;
-      color: var(--primary);
-      margin: 25px 0 15px 0;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 500;
-    }
-    
-    @media (max-width: 600px) {
-      body {
-        padding: 15px;
-      }
-      
-      .container {
-        padding: 18px;
-      }
-      
-      .button-group {
-        flex-direction: column;
-      }
-      
-      button {
-        width: 100%;
-      }
+    .hidden {
+      display: none;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <h1>Price Match Tool</h1>
-
-    <div class="input-group">
-      <label for="fullPrice">Full Price (including tax):</label>
-      <input type="number" id="fullPrice" placeholder="Enter total amount paid...">
+    <h1>Detroit Axle Price Match Tool</h1>
+    
+    <div class="form-group">
+      <label for="fullPrice">Total Order Amount (including tax):</label>
+      <input type="number" id="fullPrice" placeholder="Enter total amount paid">
     </div>
-
-    <div class="section-title">Items in Order</div>
+    
     <div id="items">
       <div class="item">
-        <label>Product SKU:</label>
-        <input type="text" class="sku" placeholder="Enter product identifier...">
-        <label>Item Price (before tax):</label>
-        <input type="number" class="price" placeholder="Enter base price...">
+        <div class="form-group">
+          <label>Product SKU:</label>
+          <input type="text" class="sku" placeholder="Enter product SKU">
+        </div>
+        <div class="form-group">
+          <label>Item Price (before tax):</label>
+          <input type="number" class="price" placeholder="Enter base price">
+        </div>
       </div>
     </div>
-
-    <div class="button-group">
-      <button onclick="addItem()">＋ Add Item</button>
-      <button onclick="calculate()">＝ Calculate Breakdown</button>
-      <button id="clearBtn" onclick="clearFields()">✕ Clear All</button>
-    </div>
-
-    <div class="section-title">Results</div>
+    
+    <button class="btn" onclick="addItem()">Add Item</button>
+    <button class="btn" onclick="calculate()">Calculate</button>
+    <button class="btn btn-secondary hidden" id="clearBtn" onclick="clearFields()">Clear All</button>
+    
     <div id="output"></div>
   </div>
 
@@ -196,14 +128,16 @@
       const item = document.createElement('div');
       item.classList.add('item');
       item.innerHTML = `
-        <label>Product SKU:</label>
-        <input type="text" class="sku" placeholder="Enter product identifier...">
-        <label>Item Price (before tax):</label>
-        <input type="number" class="price" placeholder="Enter base price...">
+        <div class="form-group">
+          <label>Product SKU:</label>
+          <input type="text" class="sku" placeholder="Enter product SKU">
+        </div>
+        <div class="form-group">
+          <label>Item Price (before tax):</label>
+          <input type="number" class="price" placeholder="Enter base price">
+        </div>
       `;
       container.appendChild(item);
-      // Scroll to the new item
-      item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function calculate() {
@@ -221,42 +155,42 @@
       }
 
       const tax = fullPrice - subtotal;
-      let result = `🛒 FULL ORDER DETAILS\n`;
-      result += `══════════════════\n`;
+      let result = `=== ORDER SUMMARY ===\n`;
       result += `Total Paid: $${fullPrice.toFixed(2)}\n`;
       result += `Subtotal: $${subtotal.toFixed(2)}\n`;
       result += `Tax: $${tax.toFixed(2)}\n\n`;
-      result += `📦 ITEM BREAKDOWN\n`;
-      result += `══════════════════\n`;
+      result += `=== ITEM BREAKDOWN ===\n`;
 
       items.forEach(item => {
         const proportion = item.price / subtotal;
         const addedTax = proportion * tax;
         const totalWithTax = item.price + addedTax;
         result += `SKU: ${item.sku || 'N/A'}\n`;
-        result += `Base Price: $${item.price.toFixed(2)}\n`;
-        result += `Tax Share: $${addedTax.toFixed(2)}\n`;
-        result += `Total: $${totalWithTax.toFixed(2)}\n\n`;
+        result += `- Base Price: $${item.price.toFixed(2)}\n`;
+        result += `- Tax Share: $${addedTax.toFixed(2)}\n`;
+        result += `- Total: $${totalWithTax.toFixed(2)}\n\n`;
       });
 
       document.getElementById('output').textContent = result;
-      document.getElementById('clearBtn').style.display = 'inline-block';
-      // Scroll to results
-      document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('clearBtn').classList.remove('hidden');
     }
 
     function clearFields() {
       document.getElementById('fullPrice').value = '';
       document.getElementById('items').innerHTML = `
         <div class="item">
-          <label>Product SKU:</label>
-          <input type="text" class="sku" placeholder="Enter product identifier...">
-          <label>Item Price (before tax):</label>
-          <input type="number" class="price" placeholder="Enter base price...">
+          <div class="form-group">
+            <label>Product SKU:</label>
+            <input type="text" class="sku" placeholder="Enter product SKU">
+          </div>
+          <div class="form-group">
+            <label>Item Price (before tax):</label>
+            <input type="number" class="price" placeholder="Enter base price">
+          </div>
         </div>
       `;
       document.getElementById('output').textContent = '';
-      document.getElementById('clearBtn').style.display = 'none';
+      document.getElementById('clearBtn').classList.add('hidden');
     }
   </script>
 </body>
