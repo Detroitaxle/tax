@@ -2,196 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Detroit Axle - Price Match Tool</title>
+  <title>Kit Analyzer</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f9fa;
-      color: #333;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-    }
-    
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    
-    h1 {
-      color: #d9230f;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    
-    .item {
-      background: #f1f1f1;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-    }
-    
-    .btn {
-      display: inline-block;
-      background: #d9230f;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      margin-right: 10px;
-      margin-bottom: 10px;
-    }
-    
-    .btn:hover {
-      background: #a91b0c;
-    }
-    
-    .btn-secondary {
-      background: #6c757d;
-    }
-    
-    .btn-secondary:hover {
-      background: #5a6268;
-    }
-    
-    #output {
-      margin-top: 20px;
-      padding: 15px;
-      background: #f1f1f1;
-      border-radius: 4px;
-      white-space: pre-wrap;
-    }
-    
-    .hidden {
-      display: none;
-    }
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    .input-area, .output-area { margin-bottom: 2em; }
+    textarea { width: 100%; min-height: 120px; }
+    input[type="number"] { width: 150px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1em; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    th { background: #f0f0f0; }
+    .tax-row { font-weight: bold; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Detroit Axle Price Match Tool</h1>
-    
-    <div class="form-group">
-      <label for="fullPrice">Total Order Amount (including tax):</label>
-      <input type="number" id="fullPrice" placeholder="Enter total amount paid">
-    </div>
-    
-    <div id="items">
-      <div class="item">
-        <div class="form-group">
-          <label>Product SKU:</label>
-          <input type="text" class="sku" placeholder="Enter product SKU">
-        </div>
-        <div class="form-group">
-          <label>Item Price (before tax):</label>
-          <input type="number" class="price" placeholder="Enter base price">
-        </div>
-      </div>
-    </div>
-    
-    <button class="btn" onclick="addItem()">Add Item</button>
-    <button class="btn" onclick="calculate()">Calculate</button>
-    <button class="btn btn-secondary hidden" id="clearBtn" onclick="clearFields()">Clear All</button>
-    
-    <div id="output"></div>
+  <h1>Kit Analyzer Tool</h1>
+  <div class="input-area">
+    <label>
+      <strong>Total Paid:</strong>
+      <input type="number" id="totalPaid" step="0.01" value="227.44">
+    </label>
+    <br><br>
+    <label>
+      <strong>Paste Kits Info:</strong>
+      <textarea id="kitsInfo" placeholder="Paste kits info here..."></textarea>
+    </label>
+    <br>
+    <button onclick="analyzeKits()">Analyze</button>
   </div>
+  <div class="output-area" id="output"></div>
 
   <script>
-    function addItem() {
-      const container = document.getElementById('items');
-      const item = document.createElement('div');
-      item.classList.add('item');
-      item.innerHTML = `
-        <div class="form-group">
-          <label>Product SKU:</label>
-          <input type="text" class="sku" placeholder="Enter product SKU">
-        </div>
-        <div class="form-group">
-          <label>Item Price (before tax):</label>
-          <input type="number" class="price" placeholder="Enter base price">
-        </div>
-      `;
-      container.appendChild(item);
-    }
-
-    function calculate() {
-      const fullPrice = parseFloat(document.getElementById('fullPrice').value) || 0;
-      const skus = document.querySelectorAll('.sku');
-      const prices = document.querySelectorAll('.price');
-      let subtotal = 0;
-      let items = [];
-
-      for (let i = 0; i < skus.length; i++) {
-        const sku = skus[i].value.trim();
-        const price = parseFloat(prices[i].value) || 0;
-        subtotal += price;
-        items.push({ sku, price });
+    function parseKits(raw) {
+      // Splits the input into kit blocks, one for each kit
+      const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const kits = [];
+      let i = 0;
+      while (i < lines.length) {
+        // Kit structure:
+        // Name
+        // SKU: ...
+        // Name (repeated)
+        // Price per 1
+        // Quantity (a number)
+        // Price for qty (total)
+        const kit = {};
+        if (i + 5 >= lines.length) break; // incomplete
+        kit.name = lines[i];
+        kit.sku = lines[i+1].replace(/^SKU: ?/, '');
+        // skip lines[i+2] (repeat of name)
+        kit.pricePer = parseFloat(lines[i+3].replace(/[^0-9.]+/g, '')) || 0;
+        kit.qty = parseInt(lines[i+4], 10) || 1;
+        kit.total = parseFloat(lines[i+5].replace(/[^0-9.]+/g, '')) || kit.pricePer * kit.qty;
+        kits.push(kit);
+        i += 6;
       }
-
-      const tax = fullPrice - subtotal;
-      let result = `=== ORDER SUMMARY ===\n`;
-      result += `Total Paid: $${fullPrice.toFixed(2)}\n`;
-      result += `Subtotal: $${subtotal.toFixed(2)}\n`;
-      result += `Tax: $${tax.toFixed(2)}\n\n`;
-      result += `=== ITEM BREAKDOWN ===\n`;
-
-      items.forEach(item => {
-        const proportion = item.price / subtotal;
-        const addedTax = proportion * tax;
-        const totalWithTax = item.price + addedTax;
-        result += `SKU: ${item.sku || 'N/A'}\n`;
-        result += `- Base Price: $${item.price.toFixed(2)}\n`;
-        result += `- Tax Share: $${addedTax.toFixed(2)}\n`;
-        result += `- Total: $${totalWithTax.toFixed(2)}\n\n`;
-      });
-
-      document.getElementById('output').textContent = result;
-      document.getElementById('clearBtn').classList.remove('hidden');
+      return kits;
     }
 
-    function clearFields() {
-      document.getElementById('fullPrice').value = '';
-      document.getElementById('items').innerHTML = `
-        <div class="item">
-          <div class="form-group">
-            <label>Product SKU:</label>
-            <input type="text" class="sku" placeholder="Enter product SKU">
-          </div>
-          <div class="form-group">
-            <label>Item Price (before tax):</label>
-            <input type="number" class="price" placeholder="Enter base price">
-          </div>
-        </div>
-      `;
-      document.getElementById('output').textContent = '';
-      document.getElementById('clearBtn').classList.add('hidden');
+    function analyzeKits() {
+      const totalPaid = parseFloat(document.getElementById('totalPaid').value) || 0;
+      const kitsRaw = document.getElementById('kitsInfo').value;
+      const kits = parseKits(kitsRaw);
+
+      // Compute subtotal of kits
+      const subtotal = kits.reduce((sum, kit) => sum + kit.total, 0);
+
+      // Tax = Total Paid - subtotal of kits
+      const tax = Math.max(0, totalPaid - subtotal);
+      const taxPerKit = kits.length ? (tax / subtotal) : 0;
+
+      // Render table
+      let html = '';
+      html += `<table>
+        <tr>
+          <th>Kit Name</th>
+          <th>SKU</th>
+          <th>Qty</th>
+          <th>Price Each (No Tax)</th>
+          <th>Total (No Tax)</th>
+          <th>Total (With Tax)</th>
+        </tr>`;
+      for (const kit of kits) {
+        // Proportionally distribute tax based on kit total
+        const kitTax = subtotal > 0 ? (kit.total / subtotal) * tax : 0;
+        html += `<tr>
+          <td>${kit.name}</td>
+          <td>${kit.sku}</td>
+          <td>${kit.qty}</td>
+          <td>$${kit.pricePer.toFixed(2)}</td>
+          <td>$${kit.total.toFixed(2)}</td>
+          <td>$${(kit.total + kitTax).toFixed(2)}</td>
+        </tr>`;
+      }
+      html += `<tr class="tax-row">
+        <td colspan="4"></td>
+        <td><strong>Tax Amount:</strong></td>
+        <td><strong>$${tax.toFixed(2)}</strong></td>
+      </tr>`;
+      html += `<tr>
+        <td colspan="4"></td>
+        <td><strong>Total Paid:</strong></td>
+        <td><strong>$${totalPaid.toFixed(2)}</strong></td>
+      </tr>`;
+      html += '</table>';
+
+      document.getElementById('output').innerHTML = html;
     }
+
+    // Example autofill for testing
+    document.getElementById('kitsInfo').value =
+      `REAR Coil Spring Strut Assembly for 2007-2014 Dodge Avenger Chrysler 200 Sebring
+SKU: 171126 x2
+REAR Coil Spring Strut Assembly for 2007-2014 Dodge Avenger Chrysler 200 Sebring
+$133.34
+1
+$133.34
+Rear Left Right Brake Calipers w/Bracket for Avenger Caliber 200 Patriot Compass
+SKU: 18B5104_18B5105
+Rear Left Right Brake Calipers w/Bracket for Avenger Caliber 200 Patriot Compass
+$94.10
+1
+$94.10`;
+
   </script>
 </body>
 </html>
