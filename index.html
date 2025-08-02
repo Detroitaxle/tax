@@ -19,48 +19,48 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      margin: 0;
     }
     .container {
       background: #23283a;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px #0006;
-      max-width: 650px;
-      width: 98%;
-      padding: 2em 2em 1.5em 2em;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px #0005;
+      max-width: 440px;
+      width: 96vw;
+      padding: 1.2em 1em 1em 1em;
       margin: 2.5em 0 2em 0;
       display: flex;
       flex-direction: column;
-      gap: 1.6em;
+      gap: 1em;
     }
     h1 {
       text-align: center;
       color: #63aaff;
       font-weight: 700;
       letter-spacing: 0.04em;
-      margin-top: 0.2em;
-      margin-bottom: 0.8em;
-      font-size: 2.1em;
+      margin: 0 0 0.5em 0;
+      font-size: 1.2em;
     }
     .input-area label {
       display: block;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.25em;
       font-weight: 600;
       color: #9dc6fb;
       letter-spacing: 0.01em;
+      font-size: 0.98em;
     }
     .input-area input[type="number"],
     .input-area textarea {
       width: 100%;
-      padding: 10px;
-      font-size: 1.1em;
+      padding: 7px 8px;
+      font-size: 1em;
       background: #171a22;
       color: #f3f6fa;
-      border: 1.5px solid #314063;
-      border-radius: 6px;
-      margin-bottom: 1.2em;
+      border: 1px solid #314063;
+      border-radius: 5px;
+      margin-bottom: 0.7em;
       transition: border 0.2s;
       font-family: inherit;
+      box-sizing: border-box;
     }
     .input-area input[type="number"]:focus,
     .input-area textarea:focus {
@@ -68,77 +68,80 @@
       outline: none;
     }
     .input-area textarea {
-      min-height: 130px;
+      min-height: 65px;
+      max-height: 110px;
       resize: vertical;
+      font-size: 0.97em;
     }
     .input-hint {
       color: #bfcad6;
-      font-size: 0.95em;
-      margin-bottom: 1em;
-      margin-top: -0.5em;
-      line-height: 1.4;
+      font-size: 0.90em;
+      margin-bottom: 0.4em;
+      margin-top: -0.1em;
+      line-height: 1.2;
       background: #161920;
-      border-left: 4px solid #63aaff;
-      padding: 0.7em 1em;
-      border-radius: 4px;
+      border-left: 3.5px solid #63aaff;
+      padding: 0.4em 0.7em;
+      border-radius: 3px;
     }
     .button-row {
       display: flex;
-      gap: 12px;
-      margin-top: 0.6em;
-      margin-bottom: 0.6em;
+      gap: 10px;
+      margin: 0.3em 0 0.6em 0;
       justify-content: flex-end;
     }
     button {
       background: linear-gradient(90deg, #4286f4 0%, #2d72d9 100%);
       color: #fff;
       border: none;
-      padding: 0.7em 1.8em;
-      border-radius: 5px;
-      font-size: 1.08em;
+      padding: 0.59em 1.2em;
+      border-radius: 4px;
+      font-size: 1em;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.16s, transform 0.13s;
-      box-shadow: 0 2px 10px #0003;
+      box-shadow: 0 2px 8px #0002;
       letter-spacing: 0.01em;
     }
     button:hover, button:focus {
       background: linear-gradient(90deg, #3376dc 0%, #1956a3 100%);
-      transform: translateY(-2px) scale(1.025);
+      transform: translateY(-1.5px) scale(1.024);
     }
     .output-area {
-      margin-top: 2em;
-      min-height: 2.5em;
-      font-size: 1.08em;
+      margin-top: 0.4em;
+      font-size: 0.98em;
       word-break: break-word;
       overflow-x: auto;
       background: #171a22;
-      border-radius: 8px;
-      padding: 1.3em 1em 1.3em 1em;
+      border-radius: 6px;
+      padding: 0.7em 0.5em;
       border: 1px solid #314063;
-      box-shadow: 0 2px 12px #0002;
+      box-shadow: 0 2px 8px #0001;
+      min-height: 0.5em;
+      max-height: 180px;
+      overflow-y: auto;
     }
     table {
       border-collapse: collapse;
       width: 100%;
-      margin-top: 0.7em;
       background: #1d202b;
       color: #e9f1fd;
-      border-radius: 7px;
+      border-radius: 5px;
       overflow: hidden;
-      font-size: 1em;
-      box-shadow: 0 2px 8px #0002;
+      font-size: 0.95em;
+      box-shadow: 0 2px 6px #0001;
+      margin: 0.2em 0 0 0;
     }
     th, td {
       border: 1px solid #314063;
-      padding: 0.67em 0.33em;
+      padding: 0.29em 0.2em;
       text-align: center;
     }
     th {
       background: #29304a;
       color: #8bc3ff;
       font-weight: 700;
-      font-size: 1.02em;
+      font-size: 0.95em;
       letter-spacing: 0.01em;
     }
     .tax-row {
@@ -148,16 +151,17 @@
     }
     .disclaimer {
       color: #aeb7c3;
-      font-size: 0.93em;
+      font-size: 0.89em;
       text-align: center;
-      margin-top: 0.65em;
-      margin-bottom: -0.4em;
+      margin-top: 0.35em;
+      margin-bottom: -0.2em;
     }
-    @media (max-width: 650px) {
-      .container { padding: 1.1em 0.4em 1em 0.4em; }
-      .output-area { padding: 0.8em 0.3em 0.8em 0.3em; }
-      th, td { font-size: 0.97em; padding: 0.5em 0.15em; }
-      h1 { font-size: 1.35em; }
+    @media (max-width: 525px) {
+      .container { padding: 0.8em 0.1em 0.6em 0.1em; }
+      .output-area { padding: 0.3em 0.1em; font-size: 0.96em; }
+      th, td { font-size: 0.95em; padding: 0.21em 0.09em; }
+      h1 { font-size: 1em; }
+      .input-area input[type="number"], .input-area textarea { font-size: 0.97em; }
     }
   </style>
 </head>
@@ -165,38 +169,23 @@
   <div class="container">
     <h1>Kit Analyzer Tool</h1>
     <div class="input-area">
-      <label for="totalPaid">Total Paid for All Kits:</label>
+      <label for="totalPaid">Total Paid:</label>
       <input
         type="number"
         id="totalPaid"
         step="0.01"
-        placeholder="Enter the actual total paid (after discounts, tax, etc.)"
+        placeholder="Total paid (after discounts, etc.)"
         autocomplete="off"
       >
-      <label for="kitsInfo">Paste Kits Info:</label>
+      <label for="kitsInfo">Kits Info:</label>
       <div class="input-hint">
-        <strong>Format for each kit:</strong><br>
-        Kit Name<br>
-        SKU: ...<br>
-        Kit Name (repeat)<br>
-        $PriceEach<br>
-        Quantity<br>
-        $TotalForQty<br>
-        <br>
-        <strong>Example:</strong><br>
-        Brake Pad Kit<br>
-        SKU: 12345<br>
-        Brake Pad Kit<br>
-        $100<br>
-        3<br>
-        $300<br>
-        <br>
-        (Repeat above block for each kit)
+        Name<br>SKU: ...<br>Name<br>$Each<br>Qty<br>$Total<br>
+        <span style="color:#63aaff;">(Repeat for each kit)</span>
       </div>
       <textarea
         id="kitsInfo"
-        placeholder="Paste kits info here in the specified format above"
-      ></textarea>
+        placeholder="Brake Kit&#10;SKU: 123&#10;Brake Kit&#10;$100&#10;2&#10;$200&#10;">
+      </textarea>
       <div class="button-row">
         <button type="button" onclick="analyzeKits()">Analyze</button>
         <button type="button" onclick="clearInputs()">Clear</button>
@@ -204,7 +193,7 @@
     </div>
     <div class="output-area" id="output"></div>
     <div class="disclaimer">
-      This tool proportionally allocates discounts (or markups) to each kit based on their original list prices. Results are for reference only.
+      Discounts/markups are distributed proportionally by list price.
     </div>
   </div>
   <script>
@@ -216,7 +205,6 @@
         const kit = {};
         kit.name = lines[i] || '';
         kit.sku = (lines[i+1] || '').replace(/^SKU:\s*/i, '');
-        // skip lines[i+2] (repeat of name)
         kit.priceEach = parseFloat((lines[i+3] || '').replace(/[^0-9.]+/g, '')) || 0;
         kit.quantity = parseInt((lines[i+4] || '').replace(/[^0-9]+/g, ''), 10) || 0;
         kit.totalList = parseFloat((lines[i+5] || '').replace(/[^0-9.]+/g, '')) || 0;
@@ -232,23 +220,23 @@
       const kits = parseKits(kitsRaw);
 
       if (kits.length === 0) {
-        document.getElementById('output').innerHTML = "<span style='color:#ff7777;'>No kits data found. Please check your input format.</span>";
+        document.getElementById('output').innerHTML = "<span style='color:#ff7777;'>No kits data found.</span>";
         return;
       }
 
       let subtotalList = kits.reduce((sum, kit) => sum + kit.totalList, 0);
 
       if (subtotalList === 0) {
-        document.getElementById('output').innerHTML = "<span style='color:#ffbb55;'>Total of kit list prices is zero. Please check your kit totals.</span>";
+        document.getElementById('output').innerHTML = "<span style='color:#ffbb55;'>Kit list total is zero.</span>";
         return;
       }
 
-      let discountRatio = totalPaid / subtotalList;
-      let percentage = ((1 - discountRatio) * 100).toFixed(2);
-      let discountType = discountRatio < 1 ? 'Discount' : (discountRatio > 1 ? 'Markup' : 'None');
+      let ratio = totalPaid / subtotalList;
+      let percent = ((1 - ratio) * 100).toFixed(1);
+      let adjType = ratio < 1 ? 'Discount' : (ratio > 1 ? 'Markup' : 'None');
 
       let appliedKits = kits.map(kit => {
-        let discountedTotal = +(kit.totalList * discountRatio).toFixed(2);
+        let discountedTotal = +(kit.totalList * ratio).toFixed(2);
         let discountedPriceEach = kit.quantity > 0 ? +(discountedTotal / kit.quantity).toFixed(2) : 0;
         return {
           ...kit,
@@ -260,18 +248,17 @@
       let displayedSubtotal = appliedKits.reduce((sum, kit) => sum + kit.discountedTotal, 0);
       let diff = +(totalPaid - displayedSubtotal).toFixed(2);
 
-      // Table
       let output = `
         <table>
           <thead>
             <tr>
-              <th>Kit Name</th>
+              <th>Name</th>
               <th>SKU</th>
-              <th>List Price<br>Each</th>
-              <th>Quantity</th>
-              <th>List Total</th>
-              <th>${discountType === 'Discount' ? 'Discounted' : discountType === 'Markup' ? 'Marked-up' : ''} Price Each</th>
-              <th>${discountType === 'Discount' ? 'Discounted' : discountType === 'Markup' ? 'Marked-up' : ''} Total</th>
+              <th>List<br>Each</th>
+              <th>Qty</th>
+              <th>List<br>Total</th>
+              <th>${adjType !== 'None' ? adjType + '<br>Each' : 'Adj.<br>Each'}</th>
+              <th>${adjType !== 'None' ? adjType + '<br>Total' : 'Adj.<br>Total'}</th>
             </tr>
           </thead>
           <tbody>
@@ -291,15 +278,15 @@
       });
       output += `
           <tr class="tax-row">
-            <td colspan="4">Kits List Subtotal</td>
+            <td colspan="4">List Subtotal</td>
             <td colspan="3">$${subtotalList.toFixed(2)}</td>
           </tr>
           <tr class="tax-row">
-            <td colspan="4">${discountType} Ratio (${discountType === 'Discount' ? 'Discount' : discountType === 'Markup' ? 'Markup' : 'None'})</td>
-            <td colspan="3">${(discountRatio * 100).toFixed(2)}% (${discountType === 'None' ? 'No adjustment' : (Math.abs(percentage) + '% ' + discountType.toLowerCase())})</td>
+            <td colspan="4">${adjType} (${ratio*100>0?ratio*100:0}%${adjType !== 'None' ? `, ${Math.abs(percent)}% ${adjType.toLowerCase()}` : ''})</td>
+            <td colspan="3">${adjType === 'None' ? 'No adjustment' : ''}</td>
           </tr>
           <tr class="tax-row">
-            <td colspan="4">Adjusted Kits Subtotal</td>
+            <td colspan="4">Adjusted Subtotal</td>
             <td colspan="3">$${displayedSubtotal.toFixed(2)}</td>
           </tr>
           <tr class="tax-row">
@@ -311,7 +298,7 @@
       if (Math.abs(diff) >= 0.01) {
         output += `
           <tr class="tax-row">
-            <td colspan="4">Rounding Adjustment</td>
+            <td colspan="4">Rounding Adj.</td>
             <td colspan="3">$${diff.toFixed(2)}</td>
           </tr>
         `;
