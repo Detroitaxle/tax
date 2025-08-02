@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kit Analyzer</title>
+  <title>Kit Analyzer Tool - Detroitaxle</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2em; }
     .input-area, .output-area { margin-bottom: 2em; }
@@ -69,7 +69,6 @@
 
       // Tax = Total Paid - subtotal of kits
       const tax = Math.max(0, totalPaid - subtotal);
-      const taxPerKit = kits.length ? (tax / subtotal) : 0;
 
       // Render table
       let html = '';
