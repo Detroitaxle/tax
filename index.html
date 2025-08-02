@@ -5,143 +5,159 @@
   <title>Kit Analyzer Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       padding: 0;
-    }
-    body {
-      min-height: 100vh;
-      background: #171a22;
+      background: #181a1b;
       color: #f3f6fa;
       font-family: 'Segoe UI', Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      min-height: 100vh;
     }
     .container {
+      max-width: 1200px;
+      width: 98vw;
+      margin: 2.5em auto 1.5em auto;
       background: #23283a;
-      border-radius: 10px;
-      box-shadow: 0 4px 16px #0005;
-      max-width: 440px;
-      width: 96vw;
-      padding: 1.2em 1em 1em 1em;
-      margin: 2.5em 0 2em 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #0006;
+      padding: 2em 2.2em 1.5em 2.2em;
       display: flex;
       flex-direction: column;
-      gap: 1em;
+      gap: 1.4em;
     }
     h1 {
       text-align: center;
       color: #63aaff;
       font-weight: 700;
       letter-spacing: 0.04em;
-      margin: 0 0 0.5em 0;
-      font-size: 1.2em;
+      margin-top: 0.2em;
+      margin-bottom: 0.8em;
+      font-size: 2.1em;
+    }
+    .inputs-row {
+      display: flex;
+      gap: 2em;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .input-area {
+      flex: 1 1 340px;
+      min-width: 280px;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
     }
     .input-area label {
-      display: block;
-      margin-bottom: 0.25em;
       font-weight: 600;
       color: #9dc6fb;
       letter-spacing: 0.01em;
-      font-size: 0.98em;
+      font-size: 1.05em;
+      margin-bottom: 0.1em;
     }
-    .input-area input[type="number"],
-    .input-area textarea {
-      width: 100%;
-      padding: 7px 8px;
-      font-size: 1em;
+    .input-area input[type="number"] {
+      padding: 9px 10px;
+      font-size: 1.12em;
       background: #171a22;
       color: #f3f6fa;
-      border: 1px solid #314063;
-      border-radius: 5px;
-      margin-bottom: 0.7em;
+      border: 1.5px solid #314063;
+      border-radius: 6px;
+      margin-bottom: 0.8em;
       transition: border 0.2s;
       font-family: inherit;
       box-sizing: border-box;
+      width: 100%;
     }
-    .input-area input[type="number"]:focus,
-    .input-area textarea:focus {
+    .input-area input[type="number"]:focus {
       border: 1.5px solid #63aaff;
       outline: none;
     }
     .input-area textarea {
-      min-height: 65px;
-      max-height: 110px;
+      width: 100%;
+      min-height: 190px;
+      max-height: 380px;
+      padding: 10px;
+      font-size: 1.08em;
+      background: #171a22;
+      color: #f3f6fa;
+      border: 1.5px solid #314063;
+      border-radius: 6px;
+      margin-bottom: 0.8em;
+      transition: border 0.2s;
+      font-family: inherit;
       resize: vertical;
-      font-size: 0.97em;
+      box-sizing: border-box;
+    }
+    .input-area textarea:focus {
+      border: 1.5px solid #63aaff;
+      outline: none;
     }
     .input-hint {
       color: #bfcad6;
-      font-size: 0.90em;
-      margin-bottom: 0.4em;
-      margin-top: -0.1em;
-      line-height: 1.2;
+      font-size: 0.96em;
+      margin-bottom: 0.2em;
+      line-height: 1.3;
       background: #161920;
-      border-left: 3.5px solid #63aaff;
-      padding: 0.4em 0.7em;
-      border-radius: 3px;
+      border-left: 4px solid #63aaff;
+      padding: 0.5em 1em;
+      border-radius: 4px;
     }
     .button-row {
       display: flex;
-      gap: 10px;
-      margin: 0.3em 0 0.6em 0;
+      gap: 14px;
+      margin-top: 0.15em;
+      margin-bottom: 0.4em;
       justify-content: flex-end;
     }
     button {
       background: linear-gradient(90deg, #4286f4 0%, #2d72d9 100%);
       color: #fff;
       border: none;
-      padding: 0.59em 1.2em;
-      border-radius: 4px;
-      font-size: 1em;
+      padding: 0.75em 2.1em;
+      border-radius: 5px;
+      font-size: 1.08em;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.16s, transform 0.13s;
-      box-shadow: 0 2px 8px #0002;
+      transition: background 0.17s, transform 0.13s;
+      box-shadow: 0 2px 10px #0003;
       letter-spacing: 0.01em;
     }
     button:hover, button:focus {
       background: linear-gradient(90deg, #3376dc 0%, #1956a3 100%);
-      transform: translateY(-1.5px) scale(1.024);
+      transform: translateY(-2px) scale(1.027);
     }
     .output-area {
-      margin-top: 0.4em;
-      font-size: 0.98em;
+      margin-top: 1.2em;
+      font-size: 1.06em;
       word-break: break-word;
       overflow-x: auto;
       background: #171a22;
-      border-radius: 6px;
-      padding: 0.7em 0.5em;
+      border-radius: 8px;
+      padding: 1.1em 1em 1.2em 1em;
       border: 1px solid #314063;
-      box-shadow: 0 2px 8px #0001;
-      min-height: 0.5em;
-      max-height: 180px;
-      overflow-y: auto;
+      box-shadow: 0 2px 12px #0002;
     }
     table {
       border-collapse: collapse;
       width: 100%;
+      margin-top: 0.7em;
       background: #1d202b;
       color: #e9f1fd;
-      border-radius: 5px;
+      border-radius: 7px;
       overflow: hidden;
-      font-size: 0.95em;
-      box-shadow: 0 2px 6px #0001;
-      margin: 0.2em 0 0 0;
+      font-size: 1em;
+      box-shadow: 0 2px 8px #0002;
     }
     th, td {
       border: 1px solid #314063;
-      padding: 0.29em 0.2em;
+      padding: 0.67em 0.33em;
       text-align: center;
     }
     th {
       background: #29304a;
       color: #8bc3ff;
       font-weight: 700;
-      font-size: 0.95em;
+      font-size: 1.02em;
       letter-spacing: 0.01em;
     }
     .tax-row {
@@ -151,44 +167,52 @@
     }
     .disclaimer {
       color: #aeb7c3;
-      font-size: 0.89em;
+      font-size: 0.95em;
       text-align: center;
-      margin-top: 0.35em;
-      margin-bottom: -0.2em;
+      margin-top: 0.65em;
+      margin-bottom: -0.4em;
     }
-    @media (max-width: 525px) {
-      .container { padding: 0.8em 0.1em 0.6em 0.1em; }
-      .output-area { padding: 0.3em 0.1em; font-size: 0.96em; }
-      th, td { font-size: 0.95em; padding: 0.21em 0.09em; }
-      h1 { font-size: 1em; }
-      .input-area input[type="number"], .input-area textarea { font-size: 0.97em; }
+    @media (max-width: 900px) {
+      .container { padding: 1.1em 0.5em 1em 0.5em; }
+      .inputs-row { flex-direction: column; gap: 0.5em;}
+      .input-area { max-width: unset; }
+      .output-area { padding: 0.7em 0.3em 0.7em 0.3em; }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 0.4em 0.1em 0.6em 0.1em; }
+      th, td { font-size: 0.97em; padding: 0.45em 0.09em; }
+      h1 { font-size: 1.14em; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Kit Analyzer Tool</h1>
-    <div class="input-area">
-      <label for="totalPaid">Total Paid:</label>
-      <input
-        type="number"
-        id="totalPaid"
-        step="0.01"
-        placeholder="Total paid (after discounts, etc.)"
-        autocomplete="off"
-      >
-      <label for="kitsInfo">Kits Info:</label>
-      <div class="input-hint">
-        Name<br>SKU: ...<br>Name<br>$Each<br>Qty<br>$Total<br>
-        <span style="color:#63aaff;">(Repeat for each kit)</span>
+    <div class="inputs-row">
+      <div class="input-area">
+        <label for="totalPaid">Total Paid:</label>
+        <input
+          type="number"
+          id="totalPaid"
+          step="0.01"
+          placeholder="Total paid (after discounts, etc.)"
+          autocomplete="off"
+        >
+        <div class="button-row">
+          <button type="button" onclick="analyzeKits()">Analyze</button>
+          <button type="button" onclick="clearInputs()">Clear</button>
+        </div>
       </div>
-      <textarea
-        id="kitsInfo"
-        placeholder="Brake Kit&#10;SKU: 123&#10;Brake Kit&#10;$100&#10;2&#10;$200&#10;">
-      </textarea>
-      <div class="button-row">
-        <button type="button" onclick="analyzeKits()">Analyze</button>
-        <button type="button" onclick="clearInputs()">Clear</button>
+      <div class="input-area">
+        <label for="kitsInfo">Kits Info:</label>
+        <div class="input-hint">
+          Name<br>SKU: ...<br>Name<br>$Each<br>Qty<br>$Total<br>
+          <span style="color:#63aaff;">(Repeat for each kit)</span>
+        </div>
+        <textarea
+          id="kitsInfo"
+          placeholder="Brake Kit&#10;SKU: 123&#10;Brake Kit&#10;$100&#10;2&#10;$200&#10;">
+        </textarea>
       </div>
     </div>
     <div class="output-area" id="output"></div>
