@@ -4,14 +4,63 @@
   <meta charset="UTF-8">
   <title>Kit Analyzer Tool - Detroitaxle</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      background: #181a1b;
+      color: #eee;
+    }
     .input-area, .output-area { margin-bottom: 2em; }
-    textarea { width: 100%; min-height: 120px; }
-    input[type="number"] { width: 150px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 1em; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    th { background: #f0f0f0; }
+    textarea, input[type="number"] {
+      background: #232526;
+      color: #eee;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 1em;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 5px;
+    }
+    textarea::placeholder, input[type="number"]::placeholder {
+      color: #777;
+    }
+    input[type="number"] {
+      width: 150px;
+      display: inline-block;
+    }
+    button {
+      background: #2d72d9;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1956a3; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1em;
+      background: #232526;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 8px;
+    }
+    th {
+      background: #222;
+      color: #fff;
+    }
     .tax-row { font-weight: bold; }
+    a { color: #6ab0f3; }
+    @media (max-width: 600px) {
+      body { margin: 0.5em; }
+      input[type="number"] { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -19,12 +68,30 @@
   <div class="input-area">
     <label>
       <strong>Total Paid:</strong>
-      <input type="number" id="totalPaid" step="0.01" value="227.44">
+      <input
+        type="number"
+        id="totalPaid"
+        step="0.01"
+        placeholder="Enter the final total paid"
+        autocomplete="off"
+      >
     </label>
     <br><br>
     <label>
       <strong>Paste Kits Info:</strong>
-      <textarea id="kitsInfo" placeholder="Paste kits info here..."></textarea>
+      <textarea
+        id="kitsInfo"
+        placeholder="Paste kits info here in the following format:
+Kit Name
+SKU: ...
+Kit Name (repeat)
+$PriceEach
+Quantity
+$TotalForQty
+
+(Repeat above block for each kit)"
+        autocomplete="off"
+      ></textarea>
     </label>
     <br>
     <button onclick="analyzeKits()">Analyze</button>
@@ -38,13 +105,6 @@
       const kits = [];
       let i = 0;
       while (i < lines.length) {
-        // Kit structure:
-        // Name
-        // SKU: ...
-        // Name (repeated)
-        // Price per 1
-        // Quantity (a number)
-        // Price for qty (total)
         const kit = {};
         if (i + 5 >= lines.length) break; // incomplete
         kit.name = lines[i];
@@ -72,57 +132,44 @@
 
       // Render table
       let html = '';
-      html += `<table>
-        <tr>
-          <th>Kit Name</th>
-          <th>SKU</th>
-          <th>Qty</th>
-          <th>Price Each (No Tax)</th>
-          <th>Total (No Tax)</th>
-          <th>Total (With Tax)</th>
+      if (kits.length === 0) {
+        html = '<p style="color:#f66;">No valid kit data detected. Please paste your kits info above.</p>';
+      } else {
+        html += `<table>
+          <tr>
+            <th>Kit Name</th>
+            <th>SKU</th>
+            <th>Qty</th>
+            <th>Price Each (No Tax)</th>
+            <th>Total (No Tax)</th>
+            <th>Total (With Tax)</th>
+          </tr>`;
+        for (const kit of kits) {
+          // Proportionally distribute tax based on kit total
+          const kitTax = subtotal > 0 ? (kit.total / subtotal) * tax : 0;
+          html += `<tr>
+            <td>${kit.name}</td>
+            <td>${kit.sku}</td>
+            <td>${kit.qty}</td>
+            <td>$${kit.pricePer.toFixed(2)}</td>
+            <td>$${kit.total.toFixed(2)}</td>
+            <td>$${(kit.total + kitTax).toFixed(2)}</td>
+          </tr>`;
+        }
+        html += `<tr class="tax-row">
+          <td colspan="4"></td>
+          <td><strong>Tax Amount:</strong></td>
+          <td><strong>$${tax.toFixed(2)}</strong></td>
         </tr>`;
-      for (const kit of kits) {
-        // Proportionally distribute tax based on kit total
-        const kitTax = subtotal > 0 ? (kit.total / subtotal) * tax : 0;
         html += `<tr>
-          <td>${kit.name}</td>
-          <td>${kit.sku}</td>
-          <td>${kit.qty}</td>
-          <td>$${kit.pricePer.toFixed(2)}</td>
-          <td>$${kit.total.toFixed(2)}</td>
-          <td>$${(kit.total + kitTax).toFixed(2)}</td>
+          <td colspan="4"></td>
+          <td><strong>Total Paid:</strong></td>
+          <td><strong>$${totalPaid.toFixed(2)}</strong></td>
         </tr>`;
+        html += '</table>';
       }
-      html += `<tr class="tax-row">
-        <td colspan="4"></td>
-        <td><strong>Tax Amount:</strong></td>
-        <td><strong>$${tax.toFixed(2)}</strong></td>
-      </tr>`;
-      html += `<tr>
-        <td colspan="4"></td>
-        <td><strong>Total Paid:</strong></td>
-        <td><strong>$${totalPaid.toFixed(2)}</strong></td>
-      </tr>`;
-      html += '</table>';
-
       document.getElementById('output').innerHTML = html;
     }
-
-    // Example autofill for testing
-    document.getElementById('kitsInfo').value =
-      `REAR Coil Spring Strut Assembly for 2007-2014 Dodge Avenger Chrysler 200 Sebring
-SKU: 171126 x2
-REAR Coil Spring Strut Assembly for 2007-2014 Dodge Avenger Chrysler 200 Sebring
-$133.34
-1
-$133.34
-Rear Left Right Brake Calipers w/Bracket for Avenger Caliber 200 Patriot Compass
-SKU: 18B5104_18B5105
-Rear Left Right Brake Calipers w/Bracket for Avenger Caliber 200 Patriot Compass
-$94.10
-1
-$94.10`;
-
   </script>
 </body>
 </html>
