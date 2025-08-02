@@ -18,9 +18,13 @@
       border-radius: 4px;
       padding: 8px;
       font-size: 1em;
-      width: 100%;
       box-sizing: border-box;
       margin-top: 5px;
+    }
+    textarea {
+      width: 98%;
+      min-height: 140px;
+      resize: vertical;
     }
     textarea::placeholder, input[type="number"]::placeholder {
       color: #777;
@@ -46,6 +50,7 @@
       width: 100%;
       margin-top: 1em;
       background: #232526;
+      color: #eee;
     }
     th, td {
       border: 1px solid #444;
@@ -60,6 +65,7 @@
     @media (max-width: 600px) {
       body { margin: 0.5em; }
       input[type="number"] { width: 100%; }
+      textarea { width: 100%; }
     }
   </style>
 </head>
