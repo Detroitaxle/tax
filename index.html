@@ -126,7 +126,7 @@ $TotalForQty
         // skip lines[i+2] (repeat of name)
         kit.priceEach = parseFloat((lines[i+3] || '').replace(/[^0-9.]+/g, '')) || 0;
         kit.quantity = parseInt((lines[i+4] || '').replace(/[^0-9]+/g, ''), 10) || 0;
-        kit.total = parseFloat((lines[i+5] || '').replace(/[^0-9.]+/g, '')) || 0;
+        kit.totalList = parseFloat((lines[i+5] || '').replace(/[^0-9.]+/g, '')) || 0;
         kits.push(kit);
         i += 6;
       }
@@ -144,45 +144,85 @@ $TotalForQty
         return;
       }
 
-      let subtotal = kits.reduce((sum, kit) => sum + kit.total, 0);
-      let tax = totalPaid - subtotal;
+      // Calculate subtotal of kit list prices
+      let subtotalList = kits.reduce((sum, kit) => sum + kit.totalList, 0);
+
+      // If subtotalList doesn't match totalPaid, apply proportional discount or markup
+      let appliedKits = [];
+      let discountRatio = subtotalList > 0 ? totalPaid / subtotalList : 1; // e.g. 0.8 if 20% discount
+
+      appliedKits = kits.map(kit => {
+        // Apply proportional ratio to each kit's total and priceEach
+        let discountedTotal = +(kit.totalList * discountRatio).toFixed(2);
+        let discountedPriceEach = kit.quantity > 0 ? +(discountedTotal / kit.quantity).toFixed(2) : 0;
+        return {
+          ...kit,
+          discountedTotal,
+          discountedPriceEach
+        };
+      });
+
+      let displayedSubtotal = appliedKits.reduce((sum, kit) => sum + kit.discountedTotal, 0);
+      let diff = +(totalPaid - displayedSubtotal).toFixed(2);
+
+      // Render table
       let output = `
         <table>
           <thead>
             <tr>
               <th>Kit Name</th>
               <th>SKU</th>
-              <th>Price Each</th>
+              <th>List Price Each</th>
               <th>Quantity</th>
-              <th>Total</th>
+              <th>List Total</th>
+              <th>Discounted Price Each</th>
+              <th>Discounted Total</th>
             </tr>
           </thead>
           <tbody>
       `;
-      kits.forEach(kit => {
+      appliedKits.forEach(kit => {
         output += `
           <tr>
             <td>${kit.name}</td>
             <td>${kit.sku}</td>
             <td>$${kit.priceEach.toFixed(2)}</td>
             <td>${kit.quantity}</td>
-            <td>$${kit.total.toFixed(2)}</td>
+            <td>$${kit.totalList.toFixed(2)}</td>
+            <td>$${kit.discountedPriceEach.toFixed(2)}</td>
+            <td>$${kit.discountedTotal.toFixed(2)}</td>
           </tr>
         `;
       });
       output += `
           <tr class="tax-row">
-            <td colspan="4">Kits Subtotal</td>
-            <td>$${subtotal.toFixed(2)}</td>
+            <td colspan="4">Kits List Subtotal</td>
+            <td colspan="3">$${subtotalList.toFixed(2)}</td>
+          </tr>
+          <tr class="tax-row">
+            <td colspan="4">Discount Ratio (Paid/List)</td>
+            <td colspan="3">${(discountRatio * 100).toFixed(2)}%</td>
+          </tr>
+          <tr class="tax-row">
+            <td colspan="4">Discounted Kits Subtotal</td>
+            <td colspan="3">$${displayedSubtotal.toFixed(2)}</td>
           </tr>
           <tr class="tax-row">
             <td colspan="4">Total Paid</td>
-            <td>$${totalPaid.toFixed(2)}</td>
+            <td colspan="3">$${totalPaid.toFixed(2)}</td>
           </tr>
+      `;
+
+      if (Math.abs(diff) >= 0.01) {
+        output += `
           <tr class="tax-row">
-            <td colspan="4">Calculated Tax/Shipping/Other</td>
-            <td>$${tax.toFixed(2)}</td>
+            <td colspan="4">Rounding Adjustment</td>
+            <td colspan="3">$${diff.toFixed(2)}</td>
           </tr>
+        `;
+      }
+
+      output += `
         </tbody>
       </table>
       `;
