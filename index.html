@@ -2,345 +2,1053 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kit Analyzer Tool</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kit Analyzer Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --primary-bg: #0f1419;
+      --secondary-bg: #1a1f2e;
+      --card-bg: #252b3d;
+      --input-bg: #1e2433;
+      --border-color: #3d4758;
+      --primary-blue: #0ea5e9;
+      --primary-blue-hover: #0284c7;
+      --success-green: #22c55e;
+      --warning-yellow: #f59e0b;
+      --error-red: #ef4444;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      background: #181a1b;
-      color: #f3f6fa;
-      font-family: 'Segoe UI', Arial, sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--primary-bg) 0%, #161b22 100%);
+      color: var(--text-primary);
       min-height: 100vh;
+      line-height: 1.6;
     }
+
     .container {
-      max-width: 1200px;
-      width: 98vw;
-      margin: 2.5em auto 1.5em auto;
-      background: #23283a;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px #0006;
-      padding: 2em 2.2em 1.5em 2.2em;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 1.4em;
+      gap: 2rem;
     }
-    h1 {
+
+    /* Header */
+    .header {
       text-align: center;
-      color: #63aaff;
+      margin-bottom: 1rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      margin-top: 0.2em;
-      margin-bottom: 0.8em;
-      font-size: 2.1em;
+      background: linear-gradient(135deg, var(--primary-blue), #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
     }
-    .inputs-row {
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
       display: flex;
-      gap: 2em;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
     }
-    .input-area {
-      flex: 1 1 340px;
-      min-width: 280px;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7em;
+
+    .card-header i {
+      font-size: 1.25rem;
+      color: var(--primary-blue);
     }
-    .input-area label {
+
+    .card-header h2 {
+      font-size: 1.25rem;
       font-weight: 600;
-      color: #9dc6fb;
-      letter-spacing: 0.01em;
-      font-size: 1.05em;
-      margin-bottom: 0.1em;
+      color: var(--text-primary);
     }
-    .input-area input[type="number"] {
-      padding: 9px 10px;
-      font-size: 1.12em;
-      background: #171a22;
-      color: #f3f6fa;
-      border: 1.5px solid #314063;
-      border-radius: 6px;
-      margin-bottom: 0.8em;
-      transition: border 0.2s;
-      font-family: inherit;
-      box-sizing: border-box;
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .form-input {
       width: 100%;
-    }
-    .input-area input[type="number"]:focus {
-      border: 1.5px solid #63aaff;
-      outline: none;
-    }
-    .input-area textarea {
-      width: 100%;
-      min-height: 190px;
-      max-height: 380px;
-      padding: 10px;
-      font-size: 1.08em;
-      background: #171a22;
-      color: #f3f6fa;
-      border: 1.5px solid #314063;
-      border-radius: 6px;
-      margin-bottom: 0.8em;
-      transition: border 0.2s;
-      font-family: inherit;
-      resize: vertical;
-      box-sizing: border-box;
-    }
-    .input-area textarea:focus {
-      border: 1.5px solid #63aaff;
-      outline: none;
-    }
-    .input-hint {
-      color: #bfcad6;
-      font-size: 0.96em;
-      margin-bottom: 0.2em;
-      line-height: 1.3;
-      background: #161920;
-      border-left: 4px solid #63aaff;
-      padding: 0.5em 1em;
-      border-radius: 4px;
-    }
-    .button-row {
-      display: flex;
-      gap: 14px;
-      margin-top: 0.15em;
-      margin-bottom: 0.4em;
-      justify-content: flex-end;
-    }
-    button {
-      background: linear-gradient(90deg, #4286f4 0%, #2d72d9 100%);
-      color: #fff;
-      border: none;
-      padding: 0.75em 2.1em;
-      border-radius: 5px;
-      font-size: 1.08em;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.17s, transform 0.13s;
-      box-shadow: 0 2px 10px #0003;
-      letter-spacing: 0.01em;
-    }
-    button:hover, button:focus {
-      background: linear-gradient(90deg, #3376dc 0%, #1956a3 100%);
-      transform: translateY(-2px) scale(1.027);
-    }
-    .output-area {
-      margin-top: 1.2em;
-      font-size: 1.06em;
-      word-break: break-word;
-      overflow-x: auto;
-      background: #171a22;
+      padding: 0.875rem 1rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
       border-radius: 8px;
-      padding: 1.1em 1em 1.2em 1em;
-      border: 1px solid #314063;
-      box-shadow: 0 2px 12px #0002;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
     }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 0.7em;
-      background: #1d202b;
-      color: #e9f1fd;
-      border-radius: 7px;
-      overflow: hidden;
-      font-size: 1em;
-      box-shadow: 0 2px 8px #0002;
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
     }
-    th, td {
-      border: 1px solid #314063;
-      padding: 0.67em 0.33em;
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-textarea {
+      min-height: 200px;
+      resize: vertical;
+      font-family: 'Consolas', 'Monaco', monospace;
+      line-height: 1.5;
+    }
+
+    /* Input Hint */
+    .input-hint {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(56, 189, 248, 0.05));
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-family: 'Consolas', 'Monaco', monospace;
+      line-height: 1.6;
+    }
+
+    .input-hint .highlight {
+      color: var(--primary-blue);
+      font-weight: 500;
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      text-decoration: none;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-blue), #0284c7);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-blue-hover), #0369a1);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-secondary {
+      background: var(--secondary-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--input-bg);
+      color: var(--text-primary);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Loading State */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Section */
+    .results-card {
+      grid-column: 1 / -1;
+      min-height: 300px;
+    }
+
+    .results-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      color: var(--text-muted);
       text-align: center;
     }
-    th {
-      background: #29304a;
-      color: #8bc3ff;
+
+    .results-empty i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .results-content {
+      display: none;
+    }
+
+    .results-content.show {
+      display: block;
+    }
+
+    /* Summary Cards */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: var(--secondary-bg);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .summary-value {
+      font-size: 1.5rem;
       font-weight: 700;
-      font-size: 1.02em;
-      letter-spacing: 0.01em;
+      margin-bottom: 0.25rem;
     }
-    .tax-row {
-      font-weight: bold;
-      background: #23283a;
-      color: #b5dbff;
+
+    .summary-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .disclaimer {
-      color: #aeb7c3;
-      font-size: 0.95em;
+
+    .summary-positive {
+      color: var(--success-green);
+    }
+
+    .summary-negative {
+      color: var(--error-red);
+    }
+
+    .summary-neutral {
+      color: var(--primary-blue);
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--secondary-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table th {
+      background: var(--input-bg);
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table td {
+      color: var(--text-primary);
+    }
+
+    .table tbody tr:hover {
+      background: rgba(14, 165, 233, 0.05);
+    }
+
+    .table .text-right {
+      text-align: right;
+    }
+
+    .table .text-center {
       text-align: center;
-      margin-top: 0.65em;
-      margin-bottom: -0.4em;
     }
-    @media (max-width: 900px) {
-      .container { padding: 1.1em 0.5em 1em 0.5em; }
-      .inputs-row { flex-direction: column; gap: 0.5em;}
-      .input-area { max-width: unset; }
-      .output-area { padding: 0.7em 0.3em 0.7em 0.3em; }
+
+    .table .font-mono {
+      font-family: 'Consolas', 'Monaco', monospace;
     }
-    @media (max-width: 600px) {
-      .container { padding: 0.4em 0.1em 0.6em 0.1em; }
-      th, td { font-size: 0.97em; padding: 0.45em 0.09em; }
-      h1 { font-size: 1.14em; }
+
+    /* Summary Row */
+    .summary-row {
+      background: var(--card-bg) !important;
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+
+    .summary-row:hover {
+      background: var(--card-bg) !important;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .alert-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .table th,
+      .table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0.5rem;
+      }
+      
+      .card {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 1.75rem;
+      }
+    }
+
+    /* Utility Classes */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-success {
+      color: var(--success-green);
+    }
+
+    .text-error {
+      color: var(--error-red);
+    }
+
+    .text-warning {
+      color: var(--warning-yellow);
+    }
+
+    .font-bold {
+      font-weight: 600;
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    /* Animation */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Kit Analyzer Tool</h1>
-    <div class="inputs-row">
-      <div class="input-area">
-        <label for="totalPaid">Total Paid:</label>
-        <input
-          type="number"
-          id="totalPaid"
-          step="0.01"
-          placeholder="Total paid (after discounts, etc.)"
-          autocomplete="off"
-        >
-        <div class="button-row">
-          <button type="button" onclick="analyzeKits()">Analyze</button>
-          <button type="button" onclick="clearInputs()">Clear</button>
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-calculator"></i> Kit Analyzer Pro</h1>
+      <p>Advanced kit pricing analysis with discount/markup calculations</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+      <!-- Input Section -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-dollar-sign"></i>
+          <h2>Payment Information</h2>
         </div>
+        
+        <form id="kitForm" novalidate>
+          <div class="form-group">
+            <label for="totalPaid" class="form-label">
+              <i class="fas fa-receipt"></i> Total Amount Paid
+            </label>
+            <input
+              type="number"
+              id="totalPaid"
+              class="form-input"
+              step="0.01"
+              min="0"
+              placeholder="Enter total paid amount"
+              autocomplete="off"
+              required
+            >
+          </div>
+
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary" id="analyzeBtn">
+              <i class="fas fa-chart-line"></i>
+              <span class="btn-text">Analyze Kits</span>
+            </button>
+            <button type="button" class="btn btn-secondary" id="clearBtn">
+              <i class="fas fa-trash"></i>
+              Clear All
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="input-area">
-        <label for="kitsInfo">Kits Info:</label>
-        <div class="input-hint">
-          Name<br>SKU: ...<br>Name<br>$Each<br>Qty<br>$Total<br>
-          <span style="color:#63aaff;">(Repeat for each kit)</span>
+
+      <!-- Kit Data Input -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-boxes"></i>
+          <h2>Kit Information</h2>
         </div>
-        <textarea
-          id="kitsInfo"
-          placeholder="Brake Kit&#10;SKU: 123&#10;Brake Kit&#10;$100&#10;2&#10;$200&#10;">
-        </textarea>
+
+        <div class="form-group">
+          <label for="kitsInfo" class="form-label">
+            <i class="fas fa-list"></i> Kit Data
+          </label>
+          
+          <div class="input-hint">
+            <strong class="highlight">Input Format:</strong><br>
+            Kit Name<br>
+            SKU: [SKU_CODE]<br>
+            [Kit Name Again]<br>
+            $[Price Each]<br>
+            [Quantity]<br>
+            $[Total Price]<br>
+            <br>
+            <span class="highlight">Repeat for each kit...</span>
+          </div>
+
+          <textarea
+            id="kitsInfo"
+            class="form-input form-textarea"
+            placeholder="Brake Kit&#10;SKU: BRK-123&#10;Brake Kit&#10;$150.00&#10;2&#10;$300.00&#10;&#10;Suspension Kit&#10;SKU: SUS-456&#10;Suspension Kit&#10;$250.00&#10;1&#10;$250.00"
+            required
+          ></textarea>
+        </div>
       </div>
     </div>
-    <div class="output-area" id="output"></div>
-    <div class="disclaimer">
-      Discounts/markups are distributed proportionally by list price.
+
+    <!-- Results Section -->
+    <div class="card results-card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar"></i>
+        <h2>Analysis Results</h2>
+      </div>
+
+      <!-- Empty State -->
+      <div class="results-empty" id="emptyState">
+        <i class="fas fa-chart-line"></i>
+        <h3>Ready for Analysis</h3>
+        <p>Enter your payment amount and kit information above, then click "Analyze Kits" to see detailed results.</p>
+      </div>
+
+      <!-- Results Content -->
+      <div class="results-content" id="resultsContent">
+        <!-- Summary Cards -->
+        <div class="summary-grid" id="summaryGrid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Kit Name</th>
+                <th>SKU</th>
+                <th class="text-right">List Price</th>
+                <th class="text-center">Qty</th>
+                <th class="text-right">List Total</th>
+                <th class="text-right">Adj. Price</th>
+                <th class="text-right">Adj. Total</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Alert Container -->
+      <div id="alertContainer"></div>
     </div>
   </div>
+
   <script>
-    function parseKits(raw) {
-      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-      const kits = [];
-      let i = 0;
-      while (i + 5 < lines.length) {
-        const kit = {};
-        kit.name = lines[i] || '';
-        kit.sku = (lines[i+1] || '').replace(/^SKU:\s*/i, '');
-        kit.priceEach = parseFloat((lines[i+3] || '').replace(/[^0-9.]+/g, '')) || 0;
-        kit.quantity = parseInt((lines[i+4] || '').replace(/[^0-9]+/g, ''), 10) || 0;
-        kit.totalList = parseFloat((lines[i+5] || '').replace(/[^0-9.]+/g, '')) || 0;
-        kits.push(kit);
-        i += 6;
-      }
-      return kits;
-    }
+    class KitAnalyzer {
+      constructor() {
+        this.form = document.getElementById('kitForm');
+        this.totalPaidInput = document.getElementById('totalPaid');
+        this.kitsInfoInput = document.getElementById('kitsInfo');
+        this.analyzeBtn = document.getElementById('analyzeBtn');
+        this.clearBtn = document.getElementById('clearBtn');
+        this.emptyState = document.getElementById('emptyState');
+        this.resultsContent = document.getElementById('resultsContent');
+        this.summaryGrid = document.getElementById('summaryGrid');
+        this.resultsTableBody = document.getElementById('resultsTableBody');
+        this.alertContainer = document.getElementById('alertContainer');
 
-    function analyzeKits() {
-      const totalPaid = parseFloat(document.getElementById('totalPaid').value) || 0;
-      const kitsRaw = document.getElementById('kitsInfo').value.trim();
-      const kits = parseKits(kitsRaw);
-
-      if (kits.length === 0) {
-        document.getElementById('output').innerHTML = "<span style='color:#ff7777;'>No kits data found.</span>";
-        return;
+        this.initializeEventListeners();
+        this.loadSavedData();
       }
 
-      let subtotalList = kits.reduce((sum, kit) => sum + kit.totalList, 0);
+      initializeEventListeners() {
+        this.form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.analyzeKits();
+        });
 
-      if (subtotalList === 0) {
-        document.getElementById('output').innerHTML = "<span style='color:#ffbb55;'>Kit list total is zero.</span>";
-        return;
+        this.clearBtn.addEventListener('click', () => {
+          this.clearAll();
+        });
+
+        // Auto-save functionality
+        this.totalPaidInput.addEventListener('input', this.debounce(() => {
+          this.saveData();
+        }, 500));
+
+        this.kitsInfoInput.addEventListener('input', this.debounce(() => {
+          this.saveData();
+        }, 500));
+
+        // Real-time validation
+        this.totalPaidInput.addEventListener('input', () => {
+          this.validateInput(this.totalPaidInput);
+        });
+
+        this.kitsInfoInput.addEventListener('input', () => {
+          this.validateInput(this.kitsInfoInput);
+        });
       }
 
-      let ratio = totalPaid / subtotalList;
-      let percent = ((1 - ratio) * 100).toFixed(1);
-      let adjType = ratio < 1 ? 'Discount' : (ratio > 1 ? 'Markup' : 'None');
-
-      let appliedKits = kits.map(kit => {
-        let discountedTotal = +(kit.totalList * ratio).toFixed(2);
-        let discountedPriceEach = kit.quantity > 0 ? +(discountedTotal / kit.quantity).toFixed(2) : 0;
-        return {
-          ...kit,
-          discountedTotal,
-          discountedPriceEach
+      debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
         };
-      });
-
-      let displayedSubtotal = appliedKits.reduce((sum, kit) => sum + kit.discountedTotal, 0);
-      let diff = +(totalPaid - displayedSubtotal).toFixed(2);
-
-      let output = `
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>SKU</th>
-              <th>List<br>Each</th>
-              <th>Qty</th>
-              <th>List<br>Total</th>
-              <th>${adjType !== 'None' ? adjType + '<br>Each' : 'Adj.<br>Each'}</th>
-              <th>${adjType !== 'None' ? adjType + '<br>Total' : 'Adj.<br>Total'}</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      appliedKits.forEach(kit => {
-        output += `
-          <tr>
-            <td>${kit.name}</td>
-            <td>${kit.sku}</td>
-            <td>$${kit.priceEach.toFixed(2)}</td>
-            <td>${kit.quantity}</td>
-            <td>$${kit.totalList.toFixed(2)}</td>
-            <td>$${kit.discountedPriceEach.toFixed(2)}</td>
-            <td>$${kit.discountedTotal.toFixed(2)}</td>
-          </tr>
-        `;
-      });
-      output += `
-          <tr class="tax-row">
-            <td colspan="4">List Subtotal</td>
-            <td colspan="3">$${subtotalList.toFixed(2)}</td>
-          </tr>
-          <tr class="tax-row">
-            <td colspan="4">${adjType} (${ratio*100>0?ratio*100:0}%${adjType !== 'None' ? `, ${Math.abs(percent)}% ${adjType.toLowerCase()}` : ''})</td>
-            <td colspan="3">${adjType === 'None' ? 'No adjustment' : ''}</td>
-          </tr>
-          <tr class="tax-row">
-            <td colspan="4">Adjusted Subtotal</td>
-            <td colspan="3">$${displayedSubtotal.toFixed(2)}</td>
-          </tr>
-          <tr class="tax-row">
-            <td colspan="4">Total Paid</td>
-            <td colspan="3">$${totalPaid.toFixed(2)}</td>
-          </tr>
-      `;
-
-      if (Math.abs(diff) >= 0.01) {
-        output += `
-          <tr class="tax-row">
-            <td colspan="4">Rounding Adj.</td>
-            <td colspan="3">$${diff.toFixed(2)}</td>
-          </tr>
-        `;
       }
 
-      output += `
-          </tbody>
-        </table>
-      `;
+      validateInput(input) {
+        const isValid = input.checkValidity();
+        input.style.borderColor = isValid ? 'var(--border-color)' : 'var(--error-red)';
+        return isValid;
+      }
 
-      document.getElementById('output').innerHTML = output;
+      showAlert(message, type = 'error') {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} fade-in`;
+        alert.innerHTML = `
+          <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+          <span>${message}</span>
+        `;
+        
+        this.alertContainer.innerHTML = '';
+        this.alertContainer.appendChild(alert);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.remove();
+          }
+        }, 5000);
+      }
+
+      setLoading(isLoading) {
+        this.analyzeBtn.disabled = isLoading;
+        const btnText = this.analyzeBtn.querySelector('.btn-text');
+        const spinner = this.analyzeBtn.querySelector('.spinner');
+
+        if (isLoading) {
+          this.analyzeBtn.classList.add('loading');
+          btnText.textContent = 'Analyzing...';
+          if (!spinner) {
+            const spinnerEl = document.createElement('div');
+            spinnerEl.className = 'spinner';
+            this.analyzeBtn.insertBefore(spinnerEl, btnText);
+          }
+        } else {
+          this.analyzeBtn.classList.remove('loading');
+          btnText.textContent = 'Analyze Kits';
+          if (spinner) {
+            spinner.remove();
+          }
+        }
+      }
+
+      parseKits(rawText) {
+        const lines = rawText.split('\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+
+        const kits = [];
+        let i = 0;
+
+        while (i + 5 < lines.length) {
+          try {
+            const kit = {
+              name: lines[i] || '',
+              sku: (lines[i + 1] || '').replace(/^SKU:\s*/i, '').trim(),
+              nameRepeat: lines[i + 2] || '',
+              priceEach: this.parsePrice(lines[i + 3] || ''),
+              quantity: this.parseQuantity(lines[i + 4] || ''),
+              totalList: this.parsePrice(lines[i + 5] || '')
+            };
+
+            // Validation
+            if (!kit.name || kit.priceEach <= 0 || kit.quantity <= 0 || kit.totalList <= 0) {
+              throw new Error(`Invalid kit data at line ${i + 1}`);
+            }
+
+            // Consistency check
+            const expectedTotal = kit.priceEach * kit.quantity;
+            const totalDiff = Math.abs(expectedTotal - kit.totalList);
+            if (totalDiff > 0.01) {
+              console.warn(`Total mismatch for kit "${kit.name}": Expected $${expectedTotal.toFixed(2)}, got $${kit.totalList.toFixed(2)}`);
+            }
+
+            kits.push(kit);
+            i += 6;
+          } catch (error) {
+            console.error(`Error parsing kit at line ${i + 1}:`, error);
+            i += 6; // Skip this kit and continue
+          }
+        }
+
+        return kits;
+      }
+
+      parsePrice(str) {
+        const cleaned = str.replace(/[^0-9.-]/g, '');
+        const parsed = parseFloat(cleaned);
+        return isNaN(parsed) ? 0 : Math.max(0, parsed);
+      }
+
+      parseQuantity(str) {
+        const cleaned = str.replace(/[^0-9]/g, '');
+        const parsed = parseInt(cleaned, 10);
+        return isNaN(parsed) ? 0 : Math.max(0, parsed);
+      }
+
+      analyzeKits() {
+        // Clear previous alerts
+        this.alertContainer.innerHTML = '';
+
+        // Validate inputs
+        const totalPaid = parseFloat(this.totalPaidInput.value) || 0;
+        const kitsRaw = this.kitsInfoInput.value.trim();
+
+        if (totalPaid <= 0) {
+          this.showAlert('Please enter a valid total paid amount.', 'error');
+          this.totalPaidInput.focus();
+          return;
+        }
+
+        if (!kitsRaw) {
+          this.showAlert('Please enter kit information.', 'error');
+          this.kitsInfoInput.focus();
+          return;
+        }
+
+        this.setLoading(true);
+
+        // Simulate processing delay for better UX
+        setTimeout(() => {
+          try {
+            const kits = this.parseKits(kitsRaw);
+
+            if (kits.length === 0) {
+              this.showAlert('No valid kit data found. Please check your input format.', 'error');
+              this.setLoading(false);
+              return;
+            }
+
+            const subtotalList = kits.reduce((sum, kit) => sum + kit.totalList, 0);
+
+            if (subtotalList === 0) {
+              this.showAlert('Kit list total is zero. Please check your kit prices.', 'warning');
+              this.setLoading(false);
+              return;
+            }
+
+            const ratio = totalPaid / subtotalList;
+            const percentChange = ((ratio - 1) * 100);
+            const adjType = ratio < 1 ? 'Discount' : (ratio > 1 ? 'Markup' : 'None');
+
+            const appliedKits = kits.map(kit => {
+              const discountedTotal = parseFloat((kit.totalList * ratio).toFixed(2));
+              const discountedPriceEach = kit.quantity > 0 ? 
+                parseFloat((discountedTotal / kit.quantity).toFixed(2)) : 0;
+              
+              return {
+                ...kit,
+                discountedTotal,
+                discountedPriceEach
+              };
+            });
+
+            const adjustedSubtotal = appliedKits.reduce((sum, kit) => sum + kit.discountedTotal, 0);
+            const roundingAdjustment = parseFloat((totalPaid - adjustedSubtotal).toFixed(2));
+
+            this.displayResults({
+              kits: appliedKits,
+              totalPaid,
+              subtotalList,
+              adjustedSubtotal,
+              ratio,
+              percentChange,
+              adjType,
+              roundingAdjustment
+            });
+
+            this.setLoading(false);
+          } catch (error) {
+            console.error('Analysis error:', error);
+            this.showAlert('An error occurred during analysis. Please check your input format.', 'error');
+            this.setLoading(false);
+          }
+        }, 300);
+      }
+
+      displayResults(data) {
+        const {
+          kits,
+          totalPaid,
+          subtotalList,
+          adjustedSubtotal,
+          ratio,
+          percentChange,
+          adjType,
+          roundingAdjustment
+        } = data;
+
+        // Show results section
+        this.emptyState.style.display = 'none';
+        this.resultsContent.style.display = 'block';
+        this.resultsContent.classList.add('fade-in');
+
+        // Create summary cards
+        this.createSummaryCards({
+          totalPaid,
+          subtotalList,
+          adjustedSubtotal,
+          percentChange,
+          adjType,
+          roundingAdjustment
+        });
+
+        // Create results table
+        this.createResultsTable(kits, data);
+      }
+
+      createSummaryCards(data) {
+        const {
+          totalPaid,
+          subtotalList,
+          adjustedSubtotal,
+          percentChange,
+          adjType,
+          roundingAdjustment
+        } = data;
+
+        const cards = [
+          {
+            label: 'List Subtotal',
+            value: `$${subtotalList.toFixed(2)}`,
+            className: 'summary-neutral'
+          },
+          {
+            label: 'Total Paid',
+            value: `$${totalPaid.toFixed(2)}`,
+            className: 'summary-neutral'
+          },
+          {
+            label: adjType === 'None' ? 'No Adjustment' : `${adjType}`,
+            value: adjType === 'None' ? '0%' : `${Math.abs(percentChange).toFixed(1)}%`,
+            className: adjType === 'Discount' ? 'summary-positive' : 
+                      adjType === 'Markup' ? 'summary-negative' : 'summary-neutral'
+          },
+          {
+            label: 'Adjusted Subtotal',
+            value: `$${adjustedSubtotal.toFixed(2)}`,
+            className: 'summary-neutral'
+          }
+        ];
+
+        if (Math.abs(roundingAdjustment) >= 0.01) {
+          cards.push({
+            label: 'Rounding Adj.',
+            value: `$${roundingAdjustment.toFixed(2)}`,
+            className: roundingAdjustment > 0 ? 'summary-positive' : 'summary-negative'
+          });
+        }
+
+        this.summaryGrid.innerHTML = cards.map(card => `
+          <div class="summary-card">
+            <div class="summary-value ${card.className}">${card.value}</div>
+            <div class="summary-label">${card.label}</div>
+          </div>
+        `).join('');
+      }
+
+      createResultsTable(kits, data) {
+        const { adjType } = data;
+        
+        let tableRows = kits.map(kit => `
+          <tr>
+            <td class="font-bold">${this.escapeHtml(kit.name)}</td>
+            <td class="font-mono text-sm">${this.escapeHtml(kit.sku)}</td>
+            <td class="text-right font-mono">$${kit.priceEach.toFixed(2)}</td>
+            <td class="text-center">${kit.quantity}</td>
+            <td class="text-right font-mono">$${kit.totalList.toFixed(2)}</td>
+            <td class="text-right font-mono">$${kit.discountedPriceEach.toFixed(2)}</td>
+            <td class="text-right font-mono">$${kit.discountedTotal.toFixed(2)}</td>
+          </tr>
+        `).join('');
+
+        // Add summary rows
+        const summaryRows = `
+          <tr class="summary-row">
+            <td colspan="4" class="font-bold">List Subtotal</td>
+            <td colspan="3" class="text-right font-mono font-bold">$${data.subtotalList.toFixed(2)}</td>
+          </tr>
+          <tr class="summary-row">
+            <td colspan="4" class="font-bold">
+              ${adjType} ${adjType !== 'None' ? `(${Math.abs(data.percentChange).toFixed(1)}%)` : ''}
+            </td>
+            <td colspan="3" class="text-right font-mono font-bold">
+              ${adjType === 'None' ? 'No adjustment' : `$${(data.adjustedSubtotal - data.subtotalList).toFixed(2)}`}
+            </td>
+          </tr>
+          <tr class="summary-row">
+            <td colspan="4" class="font-bold">Adjusted Subtotal</td>
+            <td colspan="3" class="text-right font-mono font-bold">$${data.adjustedSubtotal.toFixed(2)}</td>
+          </tr>
+          ${Math.abs(data.roundingAdjustment) >= 0.01 ? `
+          <tr class="summary-row">
+            <td colspan="4" class="font-bold">Rounding Adjustment</td>
+            <td colspan="3" class="text-right font-mono font-bold">$${data.roundingAdjustment.toFixed(2)}</td>
+          </tr>
+          ` : ''}
+          <tr class="summary-row">
+            <td colspan="4" class="font-bold">Total Paid</td>
+            <td colspan="3" class="text-right font-mono font-bold">$${data.totalPaid.toFixed(2)}</td>
+          </tr>
+        `;
+
+        this.resultsTableBody.innerHTML = tableRows + summaryRows;
+      }
+
+      escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      clearAll() {
+        if (confirm('Are you sure you want to clear all data?')) {
+          this.totalPaidInput.value = '';
+          this.kitsInfoInput.value = '';
+          this.emptyState.style.display = 'flex';
+          this.resultsContent.style.display = 'none';
+          this.alertContainer.innerHTML = '';
+          
+          // Reset input styles
+          this.totalPaidInput.style.borderColor = 'var(--border-color)';
+          this.kitsInfoInput.style.borderColor = 'var(--border-color)';
+          
+          // Clear saved data
+          localStorage.removeItem('kitAnalyzer_data');
+          
+          this.totalPaidInput.focus();
+        }
+      }
+
+      saveData() {
+        const data = {
+          totalPaid: this.totalPaidInput.value,
+          kitsInfo: this.kitsInfoInput.value,
+          timestamp: Date.now()
+        };
+        localStorage.setItem('kitAnalyzer_data', JSON.stringify(data));
+      }
+
+      loadSavedData() {
+        try {
+          const saved = localStorage.getItem('kitAnalyzer_data');
+          if (saved) {
+            const data = JSON.parse(saved);
+            // Only load if data is less than 24 hours old
+            if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+              this.totalPaidInput.value = data.totalPaid || '';
+              this.kitsInfoInput.value = data.kitsInfo || '';
+            }
+          }
+        } catch (error) {
+          console.error('Error loading saved data:', error);
+        }
+      }
     }
 
-    function clearInputs() {
-      document.getElementById('totalPaid').value = '';
-      document.getElementById('kitsInfo').value = '';
-      document.getElementById('output').innerHTML = '';
-    }
+    // Initialize the application when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new KitAnalyzer();
+    });
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd + Enter to analyze
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('analyzeBtn').click();
+      }
+      
+      // Ctrl/Cmd + K to clear
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        document.getElementById('clearBtn').click();
+      }
+    });
   </script>
 </body>
 </html>
