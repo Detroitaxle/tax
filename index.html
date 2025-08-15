@@ -2,1053 +2,412 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Sudoku Game - Dark Theme</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kit Analyzer Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-bg: #0f1419;
-      --secondary-bg: #1a1f2e;
-      --card-bg: #252b3d;
-      --input-bg: #1e2433;
-      --border-color: #3d4758;
-      --primary-blue: #0ea5e9;
-      --primary-blue-hover: #0284c7;
-      --success-green: #22c55e;
-      --warning-yellow: #f59e0b;
-      --error-red: #ef4444;
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --bg: #181825;
+      --panel: #232339;
+      --cell: #22223b;
+      --cell-highlight: #44446b;
+      --cell-selected: #7c7cff;
+      --text: #f8f8f2;
+      --accent: #9aedfe;
+      --error: #ff5555;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, var(--primary-bg) 0%, #161b22 100%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--primary-blue), #38bdf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.5rem;
-    }
-
-    .header p {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-    }
-
-    /* Main Grid */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      flex: 1;
-    }
-
-    /* Cards */
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color);
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    .card-header {
-      display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
+      justify-content: flex-start;
     }
-
-    .card-header i {
-      font-size: 1.25rem;
-      color: var(--primary-blue);
+    h1 {
+      margin-top: 1.2em;
+      color: var(--accent);
+      font-size: 2.2em;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 12px #0006;
     }
-
-    .card-header h2 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
+    .sudoku-board {
+      background: var(--panel);
+      border-radius: 12px;
+      box-shadow: 0 2px 18px #0009;
+      padding: 18px;
+      margin: 2em auto;
+      display: grid;
+      grid-template-columns: repeat(9, 48px);
+      grid-template-rows: repeat(9, 48px);
+      gap: 2px;
+      border: 4px solid var(--cell-selected);
     }
-
-    /* Form Elements */
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-      display: block;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 0.875rem 1rem;
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-size: 1rem;
-      transition: all 0.2s ease;
-      font-family: inherit;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-    }
-
-    .form-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .form-textarea {
-      min-height: 200px;
-      resize: vertical;
-      font-family: 'Consolas', 'Monaco', monospace;
-      line-height: 1.5;
-    }
-
-    /* Input Hint */
-    .input-hint {
-      background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(56, 189, 248, 0.05));
-      border: 1px solid rgba(14, 165, 233, 0.2);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      font-family: 'Consolas', 'Monaco', monospace;
-      line-height: 1.6;
-    }
-
-    .input-hint .highlight {
-      color: var(--primary-blue);
-      font-weight: 500;
-    }
-
-    /* Buttons */
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .btn {
-      padding: 0.875rem 1.5rem;
+    .cell {
+      background: var(--cell);
+      color: var(--text);
+      font-size: 1.5em;
+      text-align: center;
+      line-height: 48px;
       border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 500;
+      outline: none;
+      width: 48px;
+      height: 48px;
+      transition: background 0.15s;
+      border-radius: 6px;
+      box-sizing: border-box;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: inherit;
-      text-decoration: none;
-      justify-content: center;
     }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-blue), #0284c7);
-      color: white;
-      flex: 1;
+    .cell[readonly], .cell.given {
+      background: #232350;
+      color: #9aedfe;
+      font-weight: bold;
+      cursor: default;
     }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, var(--primary-blue-hover), #0369a1);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-lg);
+    .cell.selected {
+      background: var(--cell-selected);
+      color: #fff;
     }
-
-    .btn-secondary {
-      background: var(--secondary-bg);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
+    .cell.highlight {
+      background: var(--cell-highlight);
     }
-
-    .btn-secondary:hover {
-      background: var(--input-bg);
-      color: var(--text-primary);
+    .cell.error {
+      background: var(--error);
+      color: #fff;
+      animation: shake 0.3s;
     }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
+    @keyframes shake {
+      0% { transform: translateX(-3px);}
+      25% { transform: translateX(3px);}
+      50% { transform: translateX(-2px);}
+      75% { transform: translateX(2px);}
+      100% { transform: translateX(0);}
     }
-
-    /* Loading State */
-    .loading {
-      opacity: 0.7;
-      pointer-events: none;
+    .sudoku-board .cell:nth-child(3n) {
+      border-right: 2.5px solid var(--cell-selected);
     }
-
-    .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top: 2px solid currentColor;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .sudoku-board .cell:nth-child(n+19):nth-child(-n+27),
+    .sudoku-board .cell:nth-child(n+46):nth-child(-n+54),
+    .sudoku-board .cell:nth-child(n+73):nth-child(-n+81) {
+      border-bottom: 2.5px solid var(--cell-selected);
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Results Section */
-    .results-card {
-      grid-column: 1 / -1;
-      min-height: 300px;
-    }
-
-    .results-empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem;
-      color: var(--text-muted);
-      text-align: center;
-    }
-
-    .results-empty i {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-
-    .results-content {
-      display: none;
-    }
-
-    .results-content.show {
-      display: block;
-    }
-
-    /* Summary Cards */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .summary-card {
-      background: var(--secondary-bg);
-      padding: 1.5rem;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      text-align: center;
-    }
-
-    .summary-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-
-    .summary-label {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .summary-positive {
-      color: var(--success-green);
-    }
-
-    .summary-negative {
-      color: var(--error-red);
-    }
-
-    .summary-neutral {
-      color: var(--primary-blue);
-    }
-
-    /* Table */
-    .table-container {
-      background: var(--secondary-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-    }
-
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .table th,
-    .table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .table th {
-      background: var(--input-bg);
-      font-weight: 600;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .table td {
-      color: var(--text-primary);
-    }
-
-    .table tbody tr:hover {
-      background: rgba(14, 165, 233, 0.05);
-    }
-
-    .table .text-right {
-      text-align: right;
-    }
-
-    .table .text-center {
-      text-align: center;
-    }
-
-    .table .font-mono {
-      font-family: 'Consolas', 'Monaco', monospace;
-    }
-
-    /* Summary Row */
-    .summary-row {
-      background: var(--card-bg) !important;
-      font-weight: 600;
-      color: var(--primary-blue);
-    }
-
-    .summary-row:hover {
-      background: var(--card-bg) !important;
-    }
-
-    /* Alerts */
-    .alert {
-      padding: 1rem;
+    .panel {
+      background: var(--panel);
       border-radius: 8px;
-      margin-bottom: 1rem;
+      padding: 1em 2em;
       display: flex;
+      gap: 1.2em;
+      margin-bottom: 1.5em;
+      box-shadow: 0 2px 10px #0005;
       align-items: center;
-      gap: 0.75rem;
     }
-
-    .alert-error {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
+    button, .num-btn {
+      background: var(--cell-selected);
+      color: #fff;
+      border: none;
+      padding: 0.8em 1.4em;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 0 0.3em;
+      transition: background 0.18s;
+      box-shadow: 0 2px 8px #0003;
     }
-
-    .alert-warning {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
+    button:hover, .num-btn:hover {
+      background: var(--accent);
+      color: #222;
     }
-
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .container {
-        padding: 1rem;
-      }
+    .num-pad {
+      display: flex;
+      gap: 0.5em;
+      justify-content: center;
+      margin-bottom: 2em;
     }
-
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
+    .footer {
+      color: #aaa;
+      margin: 2em 0 1em 0;
+      font-size: 0.95em;
+    }
+    @media (max-width: 600px) {
+      .sudoku-board {
+        grid-template-columns: repeat(9, 8vw);
+        grid-template-rows: repeat(9, 8vw);
       }
-      
-      .card {
-        padding: 1.5rem;
+      .cell {
+        width: 8vw;
+        height: 8vw;
+        font-size: 4.5vw;
       }
-      
-      .button-group {
+      .panel {
         flex-direction: column;
+        gap: 0.6em;
+        padding: 1em;
       }
-      
-      .summary-grid {
-        grid-template-columns: 1fr;
+      .num-pad {
+        flex-wrap: wrap;
+        gap: 0.3em;
       }
-      
-      .table th,
-      .table td {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 0.5rem;
-      }
-      
-      .card {
-        padding: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 1.75rem;
-      }
-    }
-
-    /* Utility Classes */
-    .hidden {
-      display: none !important;
-    }
-
-    .text-success {
-      color: var(--success-green);
-    }
-
-    .text-error {
-      color: var(--error-red);
-    }
-
-    .text-warning {
-      color: var(--warning-yellow);
-    }
-
-    .font-bold {
-      font-weight: 600;
-    }
-
-    .text-sm {
-      font-size: 0.875rem;
-    }
-
-    /* Animation */
-    .fade-in {
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1><i class="fas fa-calculator"></i> Kit Analyzer Pro</h1>
-      <p>Advanced kit pricing analysis with discount/markup calculations</p>
-    </div>
-
-    <!-- Main Grid -->
-    <div class="main-grid">
-      <!-- Input Section -->
-      <div class="card">
-        <div class="card-header">
-          <i class="fas fa-dollar-sign"></i>
-          <h2>Payment Information</h2>
-        </div>
-        
-        <form id="kitForm" novalidate>
-          <div class="form-group">
-            <label for="totalPaid" class="form-label">
-              <i class="fas fa-receipt"></i> Total Amount Paid
-            </label>
-            <input
-              type="number"
-              id="totalPaid"
-              class="form-input"
-              step="0.01"
-              min="0"
-              placeholder="Enter total paid amount"
-              autocomplete="off"
-              required
-            >
-          </div>
-
-          <div class="button-group">
-            <button type="submit" class="btn btn-primary" id="analyzeBtn">
-              <i class="fas fa-chart-line"></i>
-              <span class="btn-text">Analyze Kits</span>
-            </button>
-            <button type="button" class="btn btn-secondary" id="clearBtn">
-              <i class="fas fa-trash"></i>
-              Clear All
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Kit Data Input -->
-      <div class="card">
-        <div class="card-header">
-          <i class="fas fa-boxes"></i>
-          <h2>Kit Information</h2>
-        </div>
-
-        <div class="form-group">
-          <label for="kitsInfo" class="form-label">
-            <i class="fas fa-list"></i> Kit Data
-          </label>
-          
-          <div class="input-hint">
-            <strong class="highlight">Input Format:</strong><br>
-            Kit Name<br>
-            SKU: [SKU_CODE]<br>
-            [Kit Name Again]<br>
-            $[Price Each]<br>
-            [Quantity]<br>
-            $[Total Price]<br>
-            <br>
-            <span class="highlight">Repeat for each kit...</span>
-          </div>
-
-          <textarea
-            id="kitsInfo"
-            class="form-input form-textarea"
-            placeholder="Brake Kit&#10;SKU: BRK-123&#10;Brake Kit&#10;$150.00&#10;2&#10;$300.00&#10;&#10;Suspension Kit&#10;SKU: SUS-456&#10;Suspension Kit&#10;$250.00&#10;1&#10;$250.00"
-            required
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- Results Section -->
-    <div class="card results-card">
-      <div class="card-header">
-        <i class="fas fa-chart-bar"></i>
-        <h2>Analysis Results</h2>
-      </div>
-
-      <!-- Empty State -->
-      <div class="results-empty" id="emptyState">
-        <i class="fas fa-chart-line"></i>
-        <h3>Ready for Analysis</h3>
-        <p>Enter your payment amount and kit information above, then click "Analyze Kits" to see detailed results.</p>
-      </div>
-
-      <!-- Results Content -->
-      <div class="results-content" id="resultsContent">
-        <!-- Summary Cards -->
-        <div class="summary-grid" id="summaryGrid">
-          <!-- Dynamically populated -->
-        </div>
-
-        <!-- Detailed Table -->
-        <div class="table-container">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Kit Name</th>
-                <th>SKU</th>
-                <th class="text-right">List Price</th>
-                <th class="text-center">Qty</th>
-                <th class="text-right">List Total</th>
-                <th class="text-right">Adj. Price</th>
-                <th class="text-right">Adj. Total</th>
-              </tr>
-            </thead>
-            <tbody id="resultsTableBody">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Alert Container -->
-      <div id="alertContainer"></div>
-    </div>
+  <h1>Sudoku (Dark Theme)</h1>
+  <div class="panel">
+    <button onclick="resetBoard()">Reset</button>
+    <button onclick="solveBoard()">Solve</button>
+    <span id="status"></span>
   </div>
-
+  <div id="board" class="sudoku-board"></div>
+  <div class="num-pad" id="numPad"></div>
+  <div class="footer">by Copilot &mdash; dark theme Sudoku, 2025</div>
   <script>
-    class KitAnalyzer {
-      constructor() {
-        this.form = document.getElementById('kitForm');
-        this.totalPaidInput = document.getElementById('totalPaid');
-        this.kitsInfoInput = document.getElementById('kitsInfo');
-        this.analyzeBtn = document.getElementById('analyzeBtn');
-        this.clearBtn = document.getElementById('clearBtn');
-        this.emptyState = document.getElementById('emptyState');
-        this.resultsContent = document.getElementById('resultsContent');
-        this.summaryGrid = document.getElementById('summaryGrid');
-        this.resultsTableBody = document.getElementById('resultsTableBody');
-        this.alertContainer = document.getElementById('alertContainer');
+    // A simple Sudoku puzzle (0 = empty)
+    const puzzle = [
+      [5,3,0, 0,7,0, 0,0,0],
+      [6,0,0, 1,9,5, 0,0,0],
+      [0,9,8, 0,0,0, 0,6,0],
+      [8,0,0, 0,6,0, 0,0,3],
+      [4,0,0, 8,0,3, 0,0,1],
+      [7,0,0, 0,2,0, 0,0,6],
+      [0,6,0, 0,0,0, 2,8,0],
+      [0,0,0, 4,1,9, 0,0,5],
+      [0,0,0, 0,8,0, 0,7,9]
+    ];
+    let board = [];
+    let selectedCell = null;
+    let errorCells = new Set();
 
-        this.initializeEventListeners();
-        this.loadSavedData();
-      }
+    function deepCopy(arr) {
+      return arr.map(row => row.slice());
+    }
 
-      initializeEventListeners() {
-        this.form.addEventListener('submit', (e) => {
-          e.preventDefault();
-          this.analyzeKits();
-        });
-
-        this.clearBtn.addEventListener('click', () => {
-          this.clearAll();
-        });
-
-        // Auto-save functionality
-        this.totalPaidInput.addEventListener('input', this.debounce(() => {
-          this.saveData();
-        }, 500));
-
-        this.kitsInfoInput.addEventListener('input', this.debounce(() => {
-          this.saveData();
-        }, 500));
-
-        // Real-time validation
-        this.totalPaidInput.addEventListener('input', () => {
-          this.validateInput(this.totalPaidInput);
-        });
-
-        this.kitsInfoInput.addEventListener('input', () => {
-          this.validateInput(this.kitsInfoInput);
-        });
-      }
-
-      debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      }
-
-      validateInput(input) {
-        const isValid = input.checkValidity();
-        input.style.borderColor = isValid ? 'var(--border-color)' : 'var(--error-red)';
-        return isValid;
-      }
-
-      showAlert(message, type = 'error') {
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type} fade-in`;
-        alert.innerHTML = `
-          <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
-          <span>${message}</span>
-        `;
-        
-        this.alertContainer.innerHTML = '';
-        this.alertContainer.appendChild(alert);
-
-        // Auto-hide after 5 seconds
-        setTimeout(() => {
-          if (alert.parentNode) {
-            alert.remove();
+    function createBoard() {
+      board = deepCopy(puzzle);
+      errorCells.clear();
+      const boardDiv = document.getElementById('board');
+      boardDiv.innerHTML = '';
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          const cell = document.createElement('input');
+          cell.type = "text";
+          cell.maxLength = 1;
+          cell.className = "cell";
+          cell.id = `cell-${row}-${col}`;
+          if (puzzle[row][col] !== 0) {
+            cell.value = puzzle[row][col];
+            cell.readOnly = true;
+            cell.classList.add("given");
           }
-        }, 5000);
-      }
-
-      setLoading(isLoading) {
-        this.analyzeBtn.disabled = isLoading;
-        const btnText = this.analyzeBtn.querySelector('.btn-text');
-        const spinner = this.analyzeBtn.querySelector('.spinner');
-
-        if (isLoading) {
-          this.analyzeBtn.classList.add('loading');
-          btnText.textContent = 'Analyzing...';
-          if (!spinner) {
-            const spinnerEl = document.createElement('div');
-            spinnerEl.className = 'spinner';
-            this.analyzeBtn.insertBefore(spinnerEl, btnText);
-          }
-        } else {
-          this.analyzeBtn.classList.remove('loading');
-          btnText.textContent = 'Analyze Kits';
-          if (spinner) {
-            spinner.remove();
-          }
-        }
-      }
-
-      parseKits(rawText) {
-        const lines = rawText.split('\n')
-          .map(line => line.trim())
-          .filter(line => line.length > 0);
-
-        const kits = [];
-        let i = 0;
-
-        while (i + 5 < lines.length) {
-          try {
-            const kit = {
-              name: lines[i] || '',
-              sku: (lines[i + 1] || '').replace(/^SKU:\s*/i, '').trim(),
-              nameRepeat: lines[i + 2] || '',
-              priceEach: this.parsePrice(lines[i + 3] || ''),
-              quantity: this.parseQuantity(lines[i + 4] || ''),
-              totalList: this.parsePrice(lines[i + 5] || '')
-            };
-
-            // Validation
-            if (!kit.name || kit.priceEach <= 0 || kit.quantity <= 0 || kit.totalList <= 0) {
-              throw new Error(`Invalid kit data at line ${i + 1}`);
-            }
-
-            // Consistency check
-            const expectedTotal = kit.priceEach * kit.quantity;
-            const totalDiff = Math.abs(expectedTotal - kit.totalList);
-            if (totalDiff > 0.01) {
-              console.warn(`Total mismatch for kit "${kit.name}": Expected $${expectedTotal.toFixed(2)}, got $${kit.totalList.toFixed(2)}`);
-            }
-
-            kits.push(kit);
-            i += 6;
-          } catch (error) {
-            console.error(`Error parsing kit at line ${i + 1}:`, error);
-            i += 6; // Skip this kit and continue
-          }
-        }
-
-        return kits;
-      }
-
-      parsePrice(str) {
-        const cleaned = str.replace(/[^0-9.-]/g, '');
-        const parsed = parseFloat(cleaned);
-        return isNaN(parsed) ? 0 : Math.max(0, parsed);
-      }
-
-      parseQuantity(str) {
-        const cleaned = str.replace(/[^0-9]/g, '');
-        const parsed = parseInt(cleaned, 10);
-        return isNaN(parsed) ? 0 : Math.max(0, parsed);
-      }
-
-      analyzeKits() {
-        // Clear previous alerts
-        this.alertContainer.innerHTML = '';
-
-        // Validate inputs
-        const totalPaid = parseFloat(this.totalPaidInput.value) || 0;
-        const kitsRaw = this.kitsInfoInput.value.trim();
-
-        if (totalPaid <= 0) {
-          this.showAlert('Please enter a valid total paid amount.', 'error');
-          this.totalPaidInput.focus();
-          return;
-        }
-
-        if (!kitsRaw) {
-          this.showAlert('Please enter kit information.', 'error');
-          this.kitsInfoInput.focus();
-          return;
-        }
-
-        this.setLoading(true);
-
-        // Simulate processing delay for better UX
-        setTimeout(() => {
-          try {
-            const kits = this.parseKits(kitsRaw);
-
-            if (kits.length === 0) {
-              this.showAlert('No valid kit data found. Please check your input format.', 'error');
-              this.setLoading(false);
-              return;
-            }
-
-            const subtotalList = kits.reduce((sum, kit) => sum + kit.totalList, 0);
-
-            if (subtotalList === 0) {
-              this.showAlert('Kit list total is zero. Please check your kit prices.', 'warning');
-              this.setLoading(false);
-              return;
-            }
-
-            const ratio = totalPaid / subtotalList;
-            const percentChange = ((ratio - 1) * 100);
-            const adjType = ratio < 1 ? 'Discount' : (ratio > 1 ? 'Markup' : 'None');
-
-            const appliedKits = kits.map(kit => {
-              const discountedTotal = parseFloat((kit.totalList * ratio).toFixed(2));
-              const discountedPriceEach = kit.quantity > 0 ? 
-                parseFloat((discountedTotal / kit.quantity).toFixed(2)) : 0;
-              
-              return {
-                ...kit,
-                discountedTotal,
-                discountedPriceEach
-              };
-            });
-
-            const adjustedSubtotal = appliedKits.reduce((sum, kit) => sum + kit.discountedTotal, 0);
-            const roundingAdjustment = parseFloat((totalPaid - adjustedSubtotal).toFixed(2));
-
-            this.displayResults({
-              kits: appliedKits,
-              totalPaid,
-              subtotalList,
-              adjustedSubtotal,
-              ratio,
-              percentChange,
-              adjType,
-              roundingAdjustment
-            });
-
-            this.setLoading(false);
-          } catch (error) {
-            console.error('Analysis error:', error);
-            this.showAlert('An error occurred during analysis. Please check your input format.', 'error');
-            this.setLoading(false);
-          }
-        }, 300);
-      }
-
-      displayResults(data) {
-        const {
-          kits,
-          totalPaid,
-          subtotalList,
-          adjustedSubtotal,
-          ratio,
-          percentChange,
-          adjType,
-          roundingAdjustment
-        } = data;
-
-        // Show results section
-        this.emptyState.style.display = 'none';
-        this.resultsContent.style.display = 'block';
-        this.resultsContent.classList.add('fade-in');
-
-        // Create summary cards
-        this.createSummaryCards({
-          totalPaid,
-          subtotalList,
-          adjustedSubtotal,
-          percentChange,
-          adjType,
-          roundingAdjustment
-        });
-
-        // Create results table
-        this.createResultsTable(kits, data);
-      }
-
-      createSummaryCards(data) {
-        const {
-          totalPaid,
-          subtotalList,
-          adjustedSubtotal,
-          percentChange,
-          adjType,
-          roundingAdjustment
-        } = data;
-
-        const cards = [
-          {
-            label: 'List Subtotal',
-            value: `$${subtotalList.toFixed(2)}`,
-            className: 'summary-neutral'
-          },
-          {
-            label: 'Total Paid',
-            value: `$${totalPaid.toFixed(2)}`,
-            className: 'summary-neutral'
-          },
-          {
-            label: adjType === 'None' ? 'No Adjustment' : `${adjType}`,
-            value: adjType === 'None' ? '0%' : `${Math.abs(percentChange).toFixed(1)}%`,
-            className: adjType === 'Discount' ? 'summary-positive' : 
-                      adjType === 'Markup' ? 'summary-negative' : 'summary-neutral'
-          },
-          {
-            label: 'Adjusted Subtotal',
-            value: `$${adjustedSubtotal.toFixed(2)}`,
-            className: 'summary-neutral'
-          }
-        ];
-
-        if (Math.abs(roundingAdjustment) >= 0.01) {
-          cards.push({
-            label: 'Rounding Adj.',
-            value: `$${roundingAdjustment.toFixed(2)}`,
-            className: roundingAdjustment > 0 ? 'summary-positive' : 'summary-negative'
-          });
-        }
-
-        this.summaryGrid.innerHTML = cards.map(card => `
-          <div class="summary-card">
-            <div class="summary-value ${card.className}">${card.value}</div>
-            <div class="summary-label">${card.label}</div>
-          </div>
-        `).join('');
-      }
-
-      createResultsTable(kits, data) {
-        const { adjType } = data;
-        
-        let tableRows = kits.map(kit => `
-          <tr>
-            <td class="font-bold">${this.escapeHtml(kit.name)}</td>
-            <td class="font-mono text-sm">${this.escapeHtml(kit.sku)}</td>
-            <td class="text-right font-mono">$${kit.priceEach.toFixed(2)}</td>
-            <td class="text-center">${kit.quantity}</td>
-            <td class="text-right font-mono">$${kit.totalList.toFixed(2)}</td>
-            <td class="text-right font-mono">$${kit.discountedPriceEach.toFixed(2)}</td>
-            <td class="text-right font-mono">$${kit.discountedTotal.toFixed(2)}</td>
-          </tr>
-        `).join('');
-
-        // Add summary rows
-        const summaryRows = `
-          <tr class="summary-row">
-            <td colspan="4" class="font-bold">List Subtotal</td>
-            <td colspan="3" class="text-right font-mono font-bold">$${data.subtotalList.toFixed(2)}</td>
-          </tr>
-          <tr class="summary-row">
-            <td colspan="4" class="font-bold">
-              ${adjType} ${adjType !== 'None' ? `(${Math.abs(data.percentChange).toFixed(1)}%)` : ''}
-            </td>
-            <td colspan="3" class="text-right font-mono font-bold">
-              ${adjType === 'None' ? 'No adjustment' : `$${(data.adjustedSubtotal - data.subtotalList).toFixed(2)}`}
-            </td>
-          </tr>
-          <tr class="summary-row">
-            <td colspan="4" class="font-bold">Adjusted Subtotal</td>
-            <td colspan="3" class="text-right font-mono font-bold">$${data.adjustedSubtotal.toFixed(2)}</td>
-          </tr>
-          ${Math.abs(data.roundingAdjustment) >= 0.01 ? `
-          <tr class="summary-row">
-            <td colspan="4" class="font-bold">Rounding Adjustment</td>
-            <td colspan="3" class="text-right font-mono font-bold">$${data.roundingAdjustment.toFixed(2)}</td>
-          </tr>
-          ` : ''}
-          <tr class="summary-row">
-            <td colspan="4" class="font-bold">Total Paid</td>
-            <td colspan="3" class="text-right font-mono font-bold">$${data.totalPaid.toFixed(2)}</td>
-          </tr>
-        `;
-
-        this.resultsTableBody.innerHTML = tableRows + summaryRows;
-      }
-
-      escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      clearAll() {
-        if (confirm('Are you sure you want to clear all data?')) {
-          this.totalPaidInput.value = '';
-          this.kitsInfoInput.value = '';
-          this.emptyState.style.display = 'flex';
-          this.resultsContent.style.display = 'none';
-          this.alertContainer.innerHTML = '';
-          
-          // Reset input styles
-          this.totalPaidInput.style.borderColor = 'var(--border-color)';
-          this.kitsInfoInput.style.borderColor = 'var(--border-color)';
-          
-          // Clear saved data
-          localStorage.removeItem('kitAnalyzer_data');
-          
-          this.totalPaidInput.focus();
-        }
-      }
-
-      saveData() {
-        const data = {
-          totalPaid: this.totalPaidInput.value,
-          kitsInfo: this.kitsInfoInput.value,
-          timestamp: Date.now()
-        };
-        localStorage.setItem('kitAnalyzer_data', JSON.stringify(data));
-      }
-
-      loadSavedData() {
-        try {
-          const saved = localStorage.getItem('kitAnalyzer_data');
-          if (saved) {
-            const data = JSON.parse(saved);
-            // Only load if data is less than 24 hours old
-            if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
-              this.totalPaidInput.value = data.totalPaid || '';
-              this.kitsInfoInput.value = data.kitsInfo || '';
-            }
-          }
-        } catch (error) {
-          console.error('Error loading saved data:', error);
+          cell.addEventListener('focus', () => selectCell(row, col));
+          cell.addEventListener('input', e => inputCell(e, row, col));
+          cell.addEventListener('keydown', e => handleKey(e, row, col));
+          boardDiv.appendChild(cell);
         }
       }
     }
 
-    // Initialize the application when DOM is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      new KitAnalyzer();
-    });
+    function selectCell(row, col) {
+      if (selectedCell) {
+        document.getElementById(selectedCell).classList.remove('selected');
+        highlightRelated(selectedCell, false);
+      }
+      selectedCell = `cell-${row}-${col}`;
+      const cell = document.getElementById(selectedCell);
+      cell.classList.add('selected');
+      highlightRelated(selectedCell, true);
+      cell.select();
+    }
 
-    // Add keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      // Ctrl/Cmd + Enter to analyze
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('analyzeBtn').click();
+    function highlightRelated(cellId, add) {
+      const [_, row, col] = cellId.split('-').map(Number);
+      for (let r = 0; r < 9; r++) {
+        document.getElementById(`cell-${r}-${col}`).classList.toggle('highlight', add);
       }
-      
-      // Ctrl/Cmd + K to clear
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        document.getElementById('clearBtn').click();
+      for (let c = 0; c < 9; c++) {
+        document.getElementById(`cell-${row}-${c}`).classList.toggle('highlight', add);
       }
-    });
+      // Highlight block
+      const br = Math.floor(row/3)*3, bc = Math.floor(col/3)*3;
+      for (let r = br; r < br+3; r++) {
+        for (let c = bc; c < bc+3; c++) {
+          document.getElementById(`cell-${r}-${c}`).classList.toggle('highlight', add);
+        }
+      }
+    }
+
+    function inputCell(e, row, col) {
+      let v = e.target.value.replace(/[^1-9]/, '');
+      e.target.value = v;
+      board[row][col] = v ? parseInt(v) : 0;
+      checkBoard();
+    }
+
+    function handleKey(e, row, col) {
+      if (e.key === "ArrowLeft" && col > 0) {
+        document.getElementById(`cell-${row}-${col-1}`).focus();
+        e.preventDefault();
+      }
+      if (e.key === "ArrowRight" && col < 8) {
+        document.getElementById(`cell-${row}-${col+1}`).focus();
+        e.preventDefault();
+      }
+      if (e.key === "ArrowUp" && row > 0) {
+        document.getElementById(`cell-${row-1}-${col}`).focus();
+        e.preventDefault();
+      }
+      if (e.key === "ArrowDown" && row < 8) {
+        document.getElementById(`cell-${row+1}-${col}`).focus();
+        e.preventDefault();
+      }
+      if (e.key === "Backspace" || e.key === "Delete") {
+        board[row][col] = 0;
+        e.target.value = "";
+        checkBoard();
+      }
+    }
+
+    function checkBoard() {
+      // Remove all error classes
+      document.querySelectorAll('.cell').forEach(cell => cell.classList.remove('error'));
+      errorCells.clear();
+      // Check conflicts
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          let v = board[row][col];
+          if (v === 0) continue;
+          // Row
+          for (let c = 0; c < 9; c++) {
+            if (c !== col && board[row][c] === v) {
+              errorCells.add(`cell-${row}-${col}`);
+              errorCells.add(`cell-${row}-${c}`);
+            }
+          }
+          // Col
+          for (let r = 0; r < 9; r++) {
+            if (r !== row && board[r][col] === v) {
+              errorCells.add(`cell-${row}-${col}`);
+              errorCells.add(`cell-${r}-${col}`);
+            }
+          }
+          // Block
+          const br = Math.floor(row/3)*3, bc = Math.floor(col/3)*3;
+          for (let r = br; r < br+3; r++) {
+            for (let c = bc; c < bc+3; c++) {
+              if ((r !== row || c !== col) && board[r][c] === v) {
+                errorCells.add(`cell-${row}-${col}`);
+                errorCells.add(`cell-${r}-${c}`);
+              }
+            }
+          }
+        }
+      }
+      errorCells.forEach(id => {
+        document.getElementById(id)?.classList.add('error');
+      });
+      if (isComplete() && errorCells.size === 0) {
+        document.getElementById('status').textContent = "🎉 Congratulations! Puzzle solved.";
+      } else {
+        document.getElementById('status').textContent = "";
+      }
+    }
+
+    function isComplete() {
+      for (let row = 0; row < 9; row++)
+        for (let col = 0; col < 9; col++)
+          if (board[row][col] === 0) return false;
+      return true;
+    }
+
+    function resetBoard() {
+      createBoard();
+      document.getElementById('status').textContent = "";
+      if (selectedCell) {
+        document.getElementById(selectedCell).classList.remove('selected');
+        highlightRelated(selectedCell, false);
+        selectedCell = null;
+      }
+    }
+
+    // Sudoku Solver (backtracking)
+    function solveBoard() {
+      let temp = deepCopy(board);
+      if (solve(temp)) {
+        board = temp;
+        for (let row = 0; row < 9; row++)
+          for (let col = 0; col < 9; col++) {
+            let cell = document.getElementById(`cell-${row}-${col}`);
+            if (!cell.readOnly) cell.value = temp[row][col] || '';
+          }
+        checkBoard();
+        document.getElementById('status').textContent = "Solved!";
+      } else {
+        document.getElementById('status').textContent = "No solution found.";
+      }
+    }
+    function solve(grid) {
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          if (grid[row][col] === 0) {
+            for (let n = 1; n <= 9; n++) {
+              if (isValid(grid, row, col, n)) {
+                grid[row][col] = n;
+                if (solve(grid)) return true;
+                grid[row][col] = 0;
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    function isValid(grid, row, col, n) {
+      for (let i = 0; i < 9; i++)
+        if (grid[row][i] === n || grid[i][col] === n) return false;
+      const br = Math.floor(row/3)*3, bc = Math.floor(col/3)*3;
+      for (let r = br; r < br+3; r++)
+        for (let c = bc; c < bc+3; c++)
+          if (grid[r][c] === n) return false;
+      return true;
+    }
+
+    // Number pad for mobile/touch input
+    function createNumPad() {
+      const pad = document.getElementById('numPad');
+      pad.innerHTML = '';
+      for (let i = 1; i <= 9; i++) {
+        const btn = document.createElement('button');
+        btn.className = "num-btn";
+        btn.textContent = i;
+        btn.onclick = () => {
+          if (selectedCell && !document.getElementById(selectedCell).readOnly) {
+            document.getElementById(selectedCell).value = i;
+            const [_, row, col] = selectedCell.split('-').map(Number);
+            board[row][col] = i;
+            checkBoard();
+          }
+        };
+        pad.appendChild(btn);
+      }
+      const delBtn = document.createElement('button');
+      delBtn.className = "num-btn";
+      delBtn.textContent = '⌫';
+      delBtn.title = "Delete";
+      delBtn.onclick = () => {
+        if (selectedCell && !document.getElementById(selectedCell).readOnly) {
+          document.getElementById(selectedCell).value = '';
+          const [_, row, col] = selectedCell.split('-').map(Number);
+          board[row][col] = 0;
+          checkBoard();
+        }
+      };
+      pad.appendChild(delBtn);
+    }
+
+    createBoard();
+    createNumPad();
   </script>
 </body>
 </html>
